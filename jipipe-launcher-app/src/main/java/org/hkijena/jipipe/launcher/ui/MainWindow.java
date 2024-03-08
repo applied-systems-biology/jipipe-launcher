@@ -1,6 +1,9 @@
 package org.hkijena.jipipe.launcher.ui;
 
+import org.hkijena.jipipe.JIPipe;
 import org.hkijena.jipipe.api.notifications.JIPipeNotificationInbox;
+import org.hkijena.jipipe.extensions.parameters.StandardParametersPlugin;
+import org.hkijena.jipipe.launcher.api.JIPipeLauncherCommons;
 import org.hkijena.jipipe.ui.JIPipeWorkbench;
 import org.hkijena.jipipe.ui.components.tabs.DocumentTabPane;
 import org.hkijena.jipipe.ui.theme.JIPipeUITheme;
@@ -9,10 +12,12 @@ import org.scijava.Context;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.Arrays;
 
-public class MainWindow extends JFrame implements JIPipeWorkbench {
+public class MainWindow extends JFrame implements JIPipeWorkbench, WindowListener {
 
-//    public static final JIPipeResourceManager RESOURCES = new JIPipeResourceManager(MainWindow.class, "org/hkijena/jipipe/launcher");
 
     public MainWindow() {
         initialize();
@@ -21,16 +26,23 @@ public class MainWindow extends JFrame implements JIPipeWorkbench {
     private void initialize() {
         setTitle("JIPipe Launcher");
         setContentPane(new LauncherPanel(this));
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        addWindowListener(this);
     }
 
     public static void main(String[] args) {
+        // Init JIPipe
+        JIPipe.createLibNoImageJInstance(Arrays.asList(StandardParametersPlugin.class));
+
+        // Init commons
+        JIPipeLauncherCommons.getInstance().initialize();
+
         // UI setup
         JIPipeUITheme.ModernLight.install();
 
         // Start main window
         MainWindow window = new MainWindow();
         window.setIconImage(UIUtils.getJIPipeIcon128());
-        window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         window.pack();
         window.setSize(1024,768);
         window.setLocationRelativeTo(null);
@@ -70,5 +82,40 @@ public class MainWindow extends JFrame implements JIPipeWorkbench {
     @Override
     public JIPipeNotificationInbox getNotificationInbox() {
         return null;
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        Runtime.getRuntime().halt(0);
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+
     }
 }
