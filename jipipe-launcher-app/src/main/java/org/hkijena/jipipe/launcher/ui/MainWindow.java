@@ -5,6 +5,7 @@ import org.hkijena.jipipe.api.notifications.JIPipeNotificationInbox;
 import org.hkijena.jipipe.extensions.parameters.StandardParametersPlugin;
 import org.hkijena.jipipe.launcher.api.JIPipeLauncherCommons;
 import org.hkijena.jipipe.ui.JIPipeWorkbench;
+import org.hkijena.jipipe.ui.components.SplashScreen;
 import org.hkijena.jipipe.ui.components.tabs.DocumentTabPane;
 import org.hkijena.jipipe.ui.theme.JIPipeUITheme;
 import org.hkijena.jipipe.utils.UIUtils;
@@ -31,14 +32,16 @@ public class MainWindow extends JFrame implements JIPipeWorkbench, WindowListene
     }
 
     public static void main(String[] args) {
+        // UI setup
+        JIPipeUITheme.ModernLight.install();
+
+//        SplashScreen.getInstance().showSplash(null);
+
         // Init JIPipe
         JIPipe.createLibNoImageJInstance(Arrays.asList(StandardParametersPlugin.class));
 
         // Init commons
         JIPipeLauncherCommons.getInstance().initialize();
-
-        // UI setup
-        JIPipeUITheme.ModernLight.install();
 
         // Start main window
         MainWindow window = new MainWindow();
@@ -47,6 +50,8 @@ public class MainWindow extends JFrame implements JIPipeWorkbench, WindowListene
         window.setSize(1024,768);
         window.setLocationRelativeTo(null);
         window.setVisible(true);
+
+//        SplashScreen.getInstance().hideSplash();
     }
 
     @Override

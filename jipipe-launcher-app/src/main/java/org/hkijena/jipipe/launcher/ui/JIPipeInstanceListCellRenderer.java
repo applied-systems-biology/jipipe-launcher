@@ -3,6 +3,7 @@ package org.hkijena.jipipe.launcher.ui;
 import org.hkijena.jipipe.launcher.api.JIPipeInstance;
 import org.hkijena.jipipe.ui.theme.ModernMetalTheme;
 import org.hkijena.jipipe.utils.StringUtils;
+import org.hkijena.jipipe.utils.UIUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -64,19 +65,30 @@ public class JIPipeInstanceListCellRenderer extends JPanel implements ListCellRe
     @Override
     public Component getListCellRendererComponent(JList<? extends JIPipeInstance> list, JIPipeInstance value, int index, boolean isSelected, boolean cellHasFocus) {
 
-        if (value.isInstalled()) {
-            iconLabel.setIcon(JIPipeLauncherAppUtils.RESOURCES.getIcon32FromResources("jipipe.png"));
-        } else {
-            iconLabel.setIcon(JIPipeLauncherAppUtils.RESOURCES.getIcon32FromResources("jipipe-muted.png"));
+        if(value == null) {
+            iconLabel.setIcon(UIUtils.getIconInverted32FromResources("actions/add.png"));
+            nameLabel.setText("Add");
+            versionLabel.setText("Import an existing ImageJ directory");
+            nameLabel.setEnabled(false);
+            versionLabel.setEnabled(false);
         }
-        nameLabel.setEnabled(value.isInstalled());
-        versionLabel.setEnabled(value.isInstalled());
+        else {
+            if (value.isInstalled()) {
+                iconLabel.setIcon(JIPipeLauncherAppUtils.RESOURCES.getIcon32FromResources("jipipe.png"));
+            } else {
+                iconLabel.setIcon(JIPipeLauncherAppUtils.RESOURCES.getIcon32FromResources("jipipe-muted.png"));
+            }
 
-        nameLabel.setText(StringUtils.orElse(value.getName(), "JIPipe"));
-        versionLabel.setText(value.getVersion());
+            nameLabel.setEnabled(value.isInstalled());
+            versionLabel.setEnabled(value.isInstalled());
+
+            nameLabel.setText(StringUtils.orElse(value.getName(), "JIPipe"));
+            versionLabel.setText(value.getVersion());
+        }
+
 
         if (isSelected) {
-            setBackground(ModernMetalTheme.CONTROL_TOGGLED);
+            setBackground(ModernMetalTheme.CONTROL_HIGHLIGHTED);
         } else {
             setBackground(UIManager.getColor("List.background"));
         }

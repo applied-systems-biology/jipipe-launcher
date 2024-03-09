@@ -1,9 +1,10 @@
 package org.hkijena.jipipe.launcher.ui;
 
 import org.hkijena.jipipe.launcher.api.JIPipeInstance;
-import org.hkijena.jipipe.launcher.api.JIPipeInstanceRepository;
 import org.hkijena.jipipe.launcher.api.JIPipeLauncherCommons;
 import org.hkijena.jipipe.launcher.api.JIPipeLauncherSettings;
+import org.hkijena.jipipe.launcher.api.events.InstancesUpdatedEvent;
+import org.hkijena.jipipe.launcher.api.events.InstancesUpdatedEventListener;
 import org.hkijena.jipipe.ui.JIPipeWorkbench;
 import org.hkijena.jipipe.ui.JIPipeWorkbenchPanel;
 import org.hkijena.jipipe.ui.components.markdown.MarkdownDocument;
@@ -14,33 +15,36 @@ import org.hkijena.jipipe.utils.UIUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
-public class LauncherPanel extends JIPipeWorkbenchPanel implements JIPipeInstanceRepository.UpdatedEventListener {
+public class LauncherPanel extends JIPipeWorkbenchPanel implements InstancesUpdatedEventListener {
     private final AutoResizeSplitPane splitPane = new AutoResizeSplitPane(AutoResizeSplitPane.LEFT_RIGHT,
             new AutoResizeSplitPane.DynamicSidebarRatio(300, true));
     private final JList<JIPipeInstance> entryJList = new JList<>();
+    private final JIPipeLauncherCommons commons = JIPipeLauncherCommons.getInstance();
 
     public LauncherPanel(JIPipeWorkbench workbench) {
         super(workbench);
         initialize();
 
-        JIPipeLauncherCommons.getInstance().getRepository().getUpdatedEventEmitter().subscribe(this);
-        JIPipeLauncherCommons.getInstance().updateRepository();
+        commons.getInstancesUpdatedEventEmitter().subscribe(this);
+        commons.queryAvailableInstances();
     }
 
     private void reloadList() {
-        JIPipeInstanceRepository repository = JIPipeLauncherCommons.getInstance().getRepository();
         JIPipeInstance currentSelection = entryJList.getSelectedValue();
 
         DefaultListModel<JIPipeInstance> model = new DefaultListModel<>();
-        for (JIPipeInstance instance : repository.getSortedInstanceList()) {
+        List<JIPipeInstance> sortedInstanceList = commons.getSortedInstanceList();
+        for (JIPipeInstance instance : sortedInstanceList) {
             model.addElement(instance);
         }
+        model.addElement(null);
 
         entryJList.setModel(model);
 
         if (currentSelection != null) {
-            if (repository.contains(currentSelection)) {
+            if (sortedInstanceList.contains(currentSelection)) {
                 showPackage(currentSelection);
             } else {
                 showAnyPackage();
@@ -51,13 +55,12 @@ public class LauncherPanel extends JIPipeWorkbenchPanel implements JIPipeInstanc
     }
 
     private void showAnyPackage() {
-        JIPipeInstanceRepository repository = JIPipeLauncherCommons.getInstance().getRepository();
-        JIPipeInstance latestInstalledInstance = repository.findLatestInstalledInstance();
+        JIPipeInstance latestInstalledInstance = commons.findLatestInstalledInstance();
         if(latestInstalledInstance != null) {
             entryJList.setSelectedValue(latestInstalledInstance, true);
         }
         else {
-            JIPipeInstance latestAvailableInstance = repository.findLatestAvailableInstance();
+            JIPipeInstance latestAvailableInstance = commons.findLatestAvailableInstance();
             if(latestAvailableInstance != null) {
                 entryJList.setSelectedValue(latestAvailableInstance, true);
             }
@@ -68,18 +71,7 @@ public class LauncherPanel extends JIPipeWorkbenchPanel implements JIPipeInstanc
     }
 
     private void showPackage(JIPipeInstance instance) {
-        if (instance == null) {
-            splitPane.setRightComponent(new JIPipeNoInstanceUI(getWorkbench()));
-        }
-        else if(instance.isNotInstalled()) {
-            splitPane.setRightComponent(new JIPipeAvailableInstanceUI(getWorkbench(), instance));
-        }
-        else if(instance.isInstalled()) {
-            splitPane.setRightComponent(new JIPipeInstalledInstanceUI(getWorkbench(), instance));
-        }
-        else {
-            splitPane.setRightComponent(new JIPipeNoInstanceUI(getWorkbench()));
-        }
+        splitPane.setRightComponent(new JIPipeInstanceUI(getWorkbench(), instance));
         revalidate();
         repaint();
         splitPane.applyRatio();
@@ -126,7 +118,7 @@ public class LauncherPanel extends JIPipeWorkbenchPanel implements JIPipeInstanc
     }
 
     @Override
-    public void onInstanceRepositoryUpdated(JIPipeInstanceRepository.UpdatedEvent event) {
+    public void onInstanceRepositoryUpdated(InstancesUpdatedEvent event) {
         reloadList();
     }
 }

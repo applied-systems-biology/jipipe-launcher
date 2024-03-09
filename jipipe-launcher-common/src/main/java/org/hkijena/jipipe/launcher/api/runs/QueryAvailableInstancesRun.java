@@ -3,7 +3,6 @@ package org.hkijena.jipipe.launcher.api.runs;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hkijena.jipipe.api.AbstractJIPipeRunnable;
 import org.hkijena.jipipe.launcher.api.JIPipeInstance;
-import org.hkijena.jipipe.launcher.api.JIPipeInstanceRepository;
 import org.hkijena.jipipe.launcher.api.JIPipeLauncherCommons;
 import org.hkijena.jipipe.utils.WebUtils;
 import org.hkijena.jipipe.utils.json.JsonUtils;
@@ -13,12 +12,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-public class UpdateAvailableInstancesRun extends AbstractJIPipeRunnable {
+public class QueryAvailableInstancesRun extends AbstractJIPipeRunnable {
 
     private List<JIPipeInstance> instances;
     @Override
     public String getTaskLabel() {
-        return "Load available instances";
+        return "Query available instances";
     }
 
     @Override
