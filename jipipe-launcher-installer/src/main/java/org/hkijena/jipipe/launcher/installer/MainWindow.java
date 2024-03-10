@@ -1,4 +1,4 @@
-package org.hkijena.jipipe.launcher.ui;
+package org.hkijena.jipipe.launcher.installer;
 
 import org.hkijena.jipipe.JIPipe;
 import org.hkijena.jipipe.api.notifications.JIPipeNotificationInbox;
@@ -6,7 +6,6 @@ import org.hkijena.jipipe.extensions.parameters.StandardParametersPlugin;
 import org.hkijena.jipipe.extensions.settings.StandardSettingsPlugin;
 import org.hkijena.jipipe.launcher.api.JIPipeLauncherCommons;
 import org.hkijena.jipipe.ui.JIPipeWorkbench;
-import org.hkijena.jipipe.ui.components.SplashScreen;
 import org.hkijena.jipipe.ui.components.tabs.DocumentTabPane;
 import org.hkijena.jipipe.ui.theme.JIPipeUITheme;
 import org.hkijena.jipipe.utils.UIUtils;
@@ -20,18 +19,11 @@ import java.util.Arrays;
 
 public class MainWindow extends JFrame implements JIPipeWorkbench, WindowListener {
 
-
     public MainWindow() {
-        initialize();
-    }
-
-    private void initialize() {
         setTitle("JIPipe Launcher");
-        setContentPane(new LauncherPanel(this));
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(this);
     }
-
     public static void main(String[] args) {
         // UI setup
         JIPipeUITheme.ModernLight.install();
@@ -46,7 +38,7 @@ public class MainWindow extends JFrame implements JIPipeWorkbench, WindowListene
         MainWindow window = new MainWindow();
         window.setIconImage(UIUtils.getJIPipeIcon128());
         window.pack();
-        window.setSize(1024,768);
+        window.setSize(800,600);
         window.setLocationRelativeTo(null);
         window.setVisible(true);
     }

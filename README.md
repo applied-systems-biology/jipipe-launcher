@@ -21,7 +21,7 @@ The project consists of following parts:
 
 * **JIPipe-Launcher-Common** provides all common functionality
 * **JIPipe-Launcher-App** contains code for the application
-* **JIPipe-Launcher-WebStarter** is the application that is downloaded on the website and does the launcher setup
+* **JIPipe-Launcher-Installer** is the application that is downloaded on the website and does the launcher setup
 
 ## Building JIPipe Launcher
 

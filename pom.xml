@@ -223,6 +223,7 @@ See the LICENSE file provided with this code for the full license.
     <modules>
         <module>jipipe-launcher-common</module>
         <module>jipipe-launcher-app</module>
+        <module>jipipe-launcher-installer</module>
     </modules>
 
     <build>

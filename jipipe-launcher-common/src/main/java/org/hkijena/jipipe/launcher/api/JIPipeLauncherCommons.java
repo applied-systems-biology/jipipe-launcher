@@ -20,6 +20,8 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
     private static JIPipeLauncherCommons INSTANCE;
 
     private Path settingsPath;
+    private Path installerPath;
+    private Path launcherPath;
     private JIPipeLauncherSettings settings = new JIPipeLauncherSettings();
     private final List<JIPipeInstance> availableInstances = new ArrayList<>();
 
@@ -32,6 +34,39 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
     public void initialize() {
         initializeSettings();
         initializeInstanceDirectory();
+        initializeBootstrapPaths();
+    }
+
+    private void initializeBootstrapPaths() {
+        if (SystemUtils.IS_OS_WINDOWS) {
+            launcherPath = Paths.get(System.getenv("APPDATA")).resolve("JIPipe")
+                    .resolve("launcher").resolve("jipipe-launcher.exe");
+            installerPath = Paths.get(System.getenv("APPDATA")).resolve("JIPipe")
+                    .resolve("launcher").resolve("JIPipeInstaller.exe");
+        } else if (SystemUtils.IS_OS_LINUX) {
+            if (System.getProperties().containsKey("XDG_DATA_HOME") && !StringUtils.isNullOrEmpty(System.getProperty("XDG_DATA_HOME"))) {
+                launcherPath = Paths.get(System.getProperty("XDG_DATA_HOME")).resolve(".local")
+                        .resolve("share").resolve("JIPipe")
+                        .resolve("launcher").resolve("jipipe-launcher.AppImage");
+                installerPath = Paths.get(System.getProperty("XDG_DATA_HOME")).resolve(".local")
+                        .resolve("share").resolve("JIPipe")
+                        .resolve("launcher").resolve("JIPipeInstaller.AppImage");
+            } else {
+                launcherPath = Paths.get(System.getProperty("user.home")).resolve(".local")
+                        .resolve("share").resolve("JIPipe")
+                        .resolve("launcher").resolve("jipipe-launcher.AppImage");
+                installerPath = Paths.get(System.getProperty("user.home")).resolve(".local")
+                        .resolve("share").resolve("JIPipe")
+                        .resolve("launcher").resolve("JIPipeInstaller.AppImage");
+            }
+        } else if (SystemUtils.IS_OS_MAC_OSX) {
+            launcherPath = Paths.get(System.getProperty("user.home")).resolve("Library").resolve("Application Support")
+                    .resolve("JIPipe Launcher").resolve("launcher").resolve("jipipe-launcher.App");
+            installerPath = Paths.get(System.getProperty("user.home")).resolve("Library").resolve("Application Support")
+                    .resolve("JIPipe Launcher").resolve("launcher").resolve("JIPipe.App");
+        } else {
+            throw new UnsupportedOperationException("Unknown operating system!");
+        }
     }
 
     private void initializeInstanceDirectory() {
@@ -39,7 +74,7 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
         if (StringUtils.isNullOrEmpty(instancePath) || !Files.isDirectory(instancePath)) {
             if (SystemUtils.IS_OS_WINDOWS) {
                 instancePath = Paths.get(System.getenv("APPDATA")).resolve("JIPipe").resolve("instances");
-            } else {
+            } else if (SystemUtils.IS_OS_LINUX) {
                 if (System.getProperties().containsKey("XDG_DATA_HOME") && !StringUtils.isNullOrEmpty(System.getProperty("XDG_DATA_HOME"))) {
                     instancePath = Paths.get(System.getProperty("XDG_DATA_HOME")).resolve(".local")
                             .resolve("share").resolve("JIPipe").resolve("instances");
@@ -47,7 +82,13 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
                     instancePath = Paths.get(System.getProperty("user.home")).resolve(".local")
                             .resolve("share").resolve("JIPipe").resolve("instances");
                 }
+            } else if (SystemUtils.IS_OS_MAC_OSX) {
+                instancePath = Paths.get(System.getProperty("user.home")).resolve("Library").resolve("Application Support")
+                        .resolve("JIPipe Launcher").resolve("instances");
+            } else {
+                throw new UnsupportedOperationException("Unknown operating system!");
             }
+
             try {
                 Files.createDirectories(instancePath);
             } catch (IOException e) {
@@ -61,13 +102,19 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
     private void initializeSettings() {
         if (SystemUtils.IS_OS_WINDOWS) {
             settingsPath = Paths.get(System.getenv("APPDATA")).resolve("JIPipe").resolve("launcher-settings.json");
-        } else {
+        } else if (SystemUtils.IS_OS_LINUX) {
             if (System.getProperties().containsKey("XDG_CONFIG_HOME") && !StringUtils.isNullOrEmpty(System.getProperty("XDG_CONFIG_HOME"))) {
                 settingsPath = Paths.get(System.getProperty("XDG_CONFIG_HOME")).resolve(".config").resolve("JIPipe").resolve("launcher-settings.json");
             } else {
                 settingsPath = Paths.get(System.getProperty("user.home")).resolve(".config").resolve("JIPipe").resolve("launcher-settings.json");
             }
+        } else if (SystemUtils.IS_OS_MAC_OSX) {
+            settingsPath = Paths.get(System.getProperty("user.home")).resolve("Library").resolve("Preferences")
+                    .resolve("JIPipe Launcher").resolve("launcher-settings.json");
+        } else {
+            throw new UnsupportedOperationException("Unknown operating system!");
         }
+
         try {
             Files.createDirectories(settingsPath.getParent());
         } catch (IOException e) {
@@ -107,6 +154,14 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
         if (!toDelete.isEmpty()) {
             writeSettings();
         }
+    }
+
+    public Path getInstallerPath() {
+        return installerPath;
+    }
+
+    public Path getLauncherPath() {
+        return launcherPath;
     }
 
     public Path getSettingsPath() {
@@ -267,7 +322,7 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
 
     public JIPipeInstanceChangeLog findChangeLog(String version) {
         for (JIPipeInstance availableInstance : availableInstances) {
-            if(Objects.equals(availableInstance.getVersion(), version)) {
+            if (Objects.equals(availableInstance.getVersion(), version)) {
                 return availableInstance.getChangeLog();
             }
         }
@@ -278,12 +333,12 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
         JIPipeInstanceDownload result = null;
         String resultVersion = instance.getVersion();
         for (JIPipeInstance availableInstance : availableInstances) {
-            if(!includeUnstable && !availableInstance.isStable()) {
+            if (!includeUnstable && !availableInstance.isStable()) {
                 continue;
             }
-            if(StringUtils.compareVersions(resultVersion, availableInstance.getVersion()) < 0) {
+            if (StringUtils.compareVersions(resultVersion, availableInstance.getVersion()) < 0) {
                 List<JIPipeInstanceDownload> compatibleDownloads = availableInstance.getCompatibleDownloads(JIPipeInstanceDownloadType.JAR);
-                if(!compatibleDownloads.isEmpty()) {
+                if (!compatibleDownloads.isEmpty()) {
                     result = compatibleDownloads.get(0);
                     resultVersion = availableInstance.getVersion();
                 }
