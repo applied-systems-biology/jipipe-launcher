@@ -109,6 +109,7 @@ public class LauncherPanel extends JIPipeWorkbenchPanel implements InstancesUpda
         toolBar.add(Box.createHorizontalGlue());
 
         JIPipeRunnerQueueButton runnerQueueButton = new JIPipeRunnerQueueButton(getWorkbench());
+        runnerQueueButton.setTasksFinishedLabel("");
         runnerQueueButton.makeFlat();
         toolBar.add(runnerQueueButton);
     }
