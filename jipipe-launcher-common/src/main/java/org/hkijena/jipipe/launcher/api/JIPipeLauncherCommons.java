@@ -142,6 +142,14 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
         JIPipeRunnerQueue.getInstance().enqueue(new QueryAvailableInstancesRun());
     }
 
+    public List<JIPipeInstance> getSortedAvailableInstanceList() {
+        List<JIPipeInstance> instances = new ArrayList<>(availableInstances);
+        instances.sort(Comparator.comparing(JIPipeInstance::isInstalled).reversed()
+                .thenComparing(JIPipeInstance::getVersion, new VersionComparator().reversed())
+                .thenComparing(JIPipeInstance::getDisplayName));
+        return instances;
+    }
+
     public List<JIPipeInstance> getSortedInstanceList() {
         List<JIPipeInstance> instances = new ArrayList<>(settings.getInstalledInstances());
         for (JIPipeInstance availableInstance : availableInstances) {

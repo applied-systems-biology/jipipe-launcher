@@ -10,13 +10,16 @@ import org.hkijena.jipipe.launcher.api.JIPipeLauncherCommons;
 import org.hkijena.jipipe.launcher.api.runs.DeleteDirectoryRun;
 import org.hkijena.jipipe.launcher.api.runs.DownloadFullPackageInstanceRun;
 import org.hkijena.jipipe.launcher.api.runs.DuplicateInstanceRun;
+import org.hkijena.jipipe.launcher.api.runs.InstanceSwitchVersionRun;
 import org.hkijena.jipipe.launcher.ui.utils.LauncherUIUtils;
 import org.hkijena.jipipe.ui.JIPipeWorkbench;
 import org.hkijena.jipipe.ui.JIPipeWorkbenchAccess;
 import org.hkijena.jipipe.ui.components.AdvancedFileChooser;
 import org.hkijena.jipipe.ui.components.ImageFrame;
 import org.hkijena.jipipe.ui.running.JIPipeRunExecuterUI;
+import org.hkijena.jipipe.ui.theme.ModernMetalTheme;
 import org.hkijena.jipipe.utils.*;
+import org.hkijena.jipipe.utils.ui.RoundedLineBorder;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -221,6 +224,38 @@ public class JIPipeInstanceUI extends ImageFrame implements JIPipeWorkbenchAcces
                 "Please input the label for this instance:</html>")) {
             return;
         }
+
+        DefaultListModel<JIPipeInstanceDownload> model = new DefaultListModel<>();
+        for (JIPipeInstance availableInstance : JIPipeLauncherCommons.getInstance().getSortedAvailableInstanceList()) {
+            for (JIPipeInstanceDownload download : availableInstance.getDownloads()) {
+                if(download.getType() == JIPipeInstanceDownloadType.JAR) {
+                    JIPipeInstanceDownload copyDownload = new JIPipeInstanceDownload(download);
+                    copyDownload.setName(availableInstance.getDisplayName() + " / " + availableInstance.getName() + " / " + availableInstance.getBranch());
+                    copyDownload.setVersion(availableInstance.getVersion());
+                    model.addElement(copyDownload);
+                }
+            }
+        }
+
+        JList<JIPipeInstanceDownload> jList = new JList<>(model);
+        jList.setCellRenderer(new JIPipeInstanceDownloadListCellRenderer());
+        if(!model.isEmpty()) {
+            jList.setSelectedIndex(0);
+        }
+
+        JPanel content = new JPanel(new BorderLayout(8,8));
+        content.setBorder(BorderFactory.createEmptyBorder(8,8,8,8));
+        content.add( new JLabel("Please select the JIPipe plugin version that should be installed"), BorderLayout.NORTH);
+        JScrollPane scrollPane = new JScrollPane(jList);
+        scrollPane.setBorder(BorderFactory.createLineBorder(ModernMetalTheme.MEDIUM_GRAY, 1));
+        content.add(scrollPane, BorderLayout.CENTER);
+
+        if(UIUtils.showConfirmDialog(this, "Switch version", new Dimension(640,
+                480), content) && jList.getSelectedValue() != null) {
+            InstanceSwitchVersionRun run = new InstanceSwitchVersionRun(instance, jList.getSelectedValue());
+            JIPipeRunExecuterUI.runInDialog(getWorkbench(), this, run);
+        }
+
     }
 
     private boolean labelInstalledInstanceIfNeeded(String message) {
