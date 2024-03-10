@@ -6,6 +6,7 @@ import org.hkijena.jipipe.launcher.api.events.InstancesUpdatedEvent;
 import org.hkijena.jipipe.launcher.api.events.InstancesUpdatedEventEmitter;
 import org.hkijena.jipipe.launcher.api.runs.QueryAvailableInstancesRun;
 import org.hkijena.jipipe.ui.running.JIPipeRunnerQueue;
+import org.hkijena.jipipe.utils.PathUtils;
 import org.hkijena.jipipe.utils.StringUtils;
 import org.hkijena.jipipe.utils.json.JsonUtils;
 
@@ -13,9 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListener {
@@ -38,16 +37,14 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
 
     private void initializeInstanceDirectory() {
         Path instancePath = settings.getDefaultInstanceDirectory();
-        if(StringUtils.isNullOrEmpty(instancePath) || !Files.isDirectory(instancePath)) {
-            if(SystemUtils.IS_OS_WINDOWS) {
+        if (StringUtils.isNullOrEmpty(instancePath) || !Files.isDirectory(instancePath)) {
+            if (SystemUtils.IS_OS_WINDOWS) {
                 instancePath = Paths.get(System.getenv("APPDATA")).resolve("JIPipe").resolve("instances");
-            }
-            else {
-                if(System.getProperties().containsKey("XDG_DATA_HOME") && !StringUtils.isNullOrEmpty(System.getProperty("XDG_DATA_HOME"))) {
+            } else {
+                if (System.getProperties().containsKey("XDG_DATA_HOME") && !StringUtils.isNullOrEmpty(System.getProperty("XDG_DATA_HOME"))) {
                     instancePath = Paths.get(System.getProperty("XDG_DATA_HOME")).resolve(".local")
                             .resolve("share").resolve("JIPipe").resolve("instances");
-                }
-                else {
+                } else {
                     instancePath = Paths.get(System.getProperty("user.home")).resolve(".local")
                             .resolve("share").resolve("JIPipe").resolve("instances");
                 }
@@ -63,14 +60,12 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
     }
 
     private void initializeSettings() {
-        if(SystemUtils.IS_OS_WINDOWS) {
+        if (SystemUtils.IS_OS_WINDOWS) {
             settingsPath = Paths.get(System.getenv("APPDATA")).resolve("JIPipe").resolve("launcher-settings.json");
-        }
-        else {
-            if(System.getProperties().containsKey("XDG_CONFIG_HOME") && !StringUtils.isNullOrEmpty(System.getProperty("XDG_CONFIG_HOME"))) {
+        } else {
+            if (System.getProperties().containsKey("XDG_CONFIG_HOME") && !StringUtils.isNullOrEmpty(System.getProperty("XDG_CONFIG_HOME"))) {
                 settingsPath = Paths.get(System.getProperty("XDG_CONFIG_HOME")).resolve(".config").resolve("JIPipe").resolve("launcher-settings.json");
-            }
-            else {
+            } else {
                 settingsPath = Paths.get(System.getProperty("user.home")).resolve(".config").resolve("JIPipe").resolve("launcher-settings.json");
             }
         }
@@ -81,19 +76,36 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
         }
 
         // Load existing settings
-        if(Files.exists(settingsPath)) {
+        if (Files.exists(settingsPath)) {
             try {
                 settings = JsonUtils.readFromFile(settingsPath, JIPipeLauncherSettings.class);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            if(settings == null) {
+            if (settings == null) {
                 settings = new JIPipeLauncherSettings();
                 writeSettings();
             }
+        } else {
+            writeSettings();
         }
-        else {
+
+        // Delete missing instances
+        removeMissingInstances();
+    }
+
+    private void removeMissingInstances() {
+        Set<JIPipeInstance> toDelete = new HashSet<>();
+        for (JIPipeInstance installedInstance : getSettings().getInstalledInstances()) {
+            if (!Files.isDirectory(installedInstance.getInstallDirectory())) {
+                toDelete.add(installedInstance);
+            }
+        }
+        for (JIPipeInstance instance : toDelete) {
+            getSettings().getInstalledInstances().remove(instance);
+        }
+        if (!toDelete.isEmpty()) {
             writeSettings();
         }
     }
@@ -115,7 +127,7 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
     }
 
     public static JIPipeLauncherCommons getInstance() {
-        if(INSTANCE == null) {
+        if (INSTANCE == null) {
             INSTANCE = new JIPipeLauncherCommons();
         }
         return INSTANCE;
@@ -131,8 +143,19 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
     }
 
     public List<JIPipeInstance> getSortedInstanceList() {
-        List<JIPipeInstance> instances = new ArrayList<>(availableInstances);
-        instances.addAll(settings.getInstalledInstances());
+        List<JIPipeInstance> instances = new ArrayList<>(settings.getInstalledInstances());
+        for (JIPipeInstance availableInstance : availableInstances) {
+            // Annotate instances with the same version with the URL
+            List<JIPipeInstance> installedWithVersion = settings.getInstalledInstances().stream().filter(installed -> Objects.equals(availableInstance.getVersion(),
+                    installed.getVersion())).collect(Collectors.toList());
+            for (JIPipeInstance instance : installedWithVersion) {
+                instance.setDownloads(availableInstance.getDownloads());
+            }
+            if (installedWithVersion.isEmpty()) {
+                // Not installed --> add
+                instances.add(availableInstance);
+            }
+        }
         instances.sort(Comparator.comparing(JIPipeInstance::isInstalled).reversed()
                 .thenComparing(JIPipeInstance::getVersion, new VersionComparator().reversed())
                 .thenComparing(JIPipeInstance::getDisplayName));
@@ -149,7 +172,7 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
 
     @Override
     public void onRunnableFinished(JIPipeRunnable.FinishedEvent event) {
-        if(event.getRun() instanceof QueryAvailableInstancesRun) {
+        if (event.getRun() instanceof QueryAvailableInstancesRun) {
             this.availableInstances.clear();
             this.availableInstances.addAll(((QueryAvailableInstancesRun) event.getRun()).getInstances());
             instancesUpdatedEventEmitter.emit(new InstancesUpdatedEvent(this));
@@ -160,5 +183,90 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
         getSettings().getInstalledInstances().add(newInstance);
         writeSettings();
         instancesUpdatedEventEmitter.emit(new InstancesUpdatedEvent(this));
+    }
+
+    public Path findNewInstanceDirectory(String name) {
+        name = StringUtils.makeUniqueString(name, "-",
+                s -> Files.exists(getSettings().getDefaultInstanceDirectory().resolve(s)));
+        return getSettings().getDefaultInstanceDirectory().resolve(name);
+    }
+
+    public void labelInstalledInstance(JIPipeInstance instance, String newName) {
+        if (!instance.isInstalled()) {
+            throw new IllegalArgumentException("Instance not installed");
+        }
+
+        // Try to rename the directory if this is not already customized
+        try {
+            if (!instance.isCustomized()) {
+                if (installedInstanceLocatedInDefaultDirectory(instance)) {
+                    String newDirectoryName = StringUtils.safeJsonify(newName.trim().toLowerCase());
+                    if (newDirectoryName.length() > 16) {
+                        newDirectoryName = newDirectoryName.substring(0, 16);
+                    }
+
+                    Path newDirectory = findNewInstanceDirectory(instance.getInstallDirectory().getFileName() + "-" + newDirectoryName);
+                    Files.move(instance.getInstallDirectory(), newDirectory);
+                    instance.setInstallDirectory(newDirectory);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        instance.setCustomized(true);
+        instance.setName(newName);
+        writeSettings();
+
+        instancesUpdatedEventEmitter.emit(new InstancesUpdatedEvent(this));
+    }
+
+    public boolean installedInstanceLocatedInDefaultDirectory(JIPipeInstance instance) {
+        return instance.isInstalled() && instance.getInstallDirectory().startsWith(getSettings().getDefaultInstanceDirectory());
+    }
+
+    public void removeInstance(JIPipeInstance instance) {
+        getSettings().getInstalledInstances().remove(instance);
+        writeSettings();
+        instancesUpdatedEventEmitter.emit(new InstancesUpdatedEvent(this));
+    }
+
+    public String importInstance(Path directory, String name) {
+        if (getSettings().getInstalledInstances().stream()
+                .anyMatch(instance -> instance.getAbsoluteApplicationDirectory().equals(directory.toAbsolutePath()))) {
+            return "Selected instance is already imported!";
+        }
+
+        JIPipeInstance instance = new JIPipeInstance();
+        instance.setName(name);
+        instance.setCustomized(true);
+        instance.setInstallDirectory(directory);
+        instance.setApplicationDirectory(Paths.get(""));
+
+        if (!Files.isRegularFile(instance.getAbsoluteExecutablePath())) {
+            return "Could not find executable! Select the ImageJ application directory.";
+        }
+
+        // Auto-detect JIPipe
+        instance.setVersion("unknown");
+
+        Path jipipePluginDir = instance.getAbsoluteApplicationDirectory().resolve("plugins").resolve("JIPipe");
+        if (Files.isDirectory(jipipePluginDir)) {
+            for (Path path : PathUtils.findFilesByExtensionIn(jipipePluginDir, ".jar")) {
+                String fileName = path.getFileName().toString();
+                if (fileName.startsWith("jipipe-")) {
+                    String[] components = fileName.substring(0, fileName.length() - 4).split("-");
+                    instance.setVersion(components[components.length - 1]);
+                    break;
+                }
+            }
+        }
+
+        // Register the instance
+        getSettings().getInstalledInstances().add(instance);
+        writeSettings();
+
+        instancesUpdatedEventEmitter.emit(new InstancesUpdatedEvent(this));
+        return null;
     }
 }

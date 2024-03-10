@@ -1,6 +1,7 @@
 package org.hkijena.jipipe.launcher.ui;
 
 import org.hkijena.jipipe.launcher.api.JIPipeInstance;
+import org.hkijena.jipipe.launcher.api.JIPipeInstanceDownloadType;
 import org.hkijena.jipipe.launcher.api.JIPipeLauncherCommons;
 import org.hkijena.jipipe.launcher.api.JIPipeLauncherSettings;
 import org.hkijena.jipipe.launcher.api.events.InstancesUpdatedEvent;
@@ -28,7 +29,10 @@ public class LauncherPanel extends JIPipeWorkbenchPanel implements InstancesUpda
         initialize();
 
         commons.getInstancesUpdatedEventEmitter().subscribe(this);
-        commons.queryAvailableInstances();
+        reloadList();
+        if(!commons.getSettings().isOfflineMode()) {
+            commons.queryAvailableInstances();
+        }
     }
 
     private void reloadList() {
@@ -37,6 +41,13 @@ public class LauncherPanel extends JIPipeWorkbenchPanel implements InstancesUpda
         DefaultListModel<JIPipeInstance> model = new DefaultListModel<>();
         List<JIPipeInstance> sortedInstanceList = commons.getSortedInstanceList();
         for (JIPipeInstance instance : sortedInstanceList) {
+
+            // Filter out versions without a full package
+            // Users will need to start from one version with existing full packages
+            if(instance.isNotInstalled() && instance.getCompatibleDownloads(JIPipeInstanceDownloadType.FullPackage).isEmpty()) {
+                continue;
+            }
+
             model.addElement(instance);
         }
         model.addElement(null);
@@ -45,7 +56,8 @@ public class LauncherPanel extends JIPipeWorkbenchPanel implements InstancesUpda
 
         if (currentSelection != null) {
             if (sortedInstanceList.contains(currentSelection)) {
-                showPackage(currentSelection);
+//                showPackage(currentSelection);
+                entryJList.setSelectedValue(currentSelection, true);
             } else {
                 showAnyPackage();
             }

@@ -5,27 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a9a2b870-8528-4685-a3bd-44f2e7ed1a13" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/utils/LauncherUIUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeInstanceDownload.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeInstanceDownloadResult.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeInstanceDownloadType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/events/InstancesUpdatedEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/events/InstancesUpdatedEventEmitter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/events/InstancesUpdatedEventListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/DownloadFullPackageInstanceRun.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/DeleteDirectoryRun.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/DuplicateInstanceRun.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/JIPipeAvailableInstanceUI.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/JIPipeInstalledInstanceUI.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/JIPipeInstanceListCellRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/JIPipeInstanceListCellRenderer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/JIPipeInstanceUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/JIPipeInstanceUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/JIPipeNoInstanceUI.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/LauncherPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/LauncherPanel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/MainWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/MainWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/utils/LauncherUIUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/utils/LauncherUIUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeInstance.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeInstance.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeInstanceRepository.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeLauncherCommons.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeLauncherCommons.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeLauncherSettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeLauncherSettings.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/UpdateAvailableInstancesRun.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/QueryAvailableInstancesRun.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/DownloadFullPackageInstanceRun.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/DownloadFullPackageInstanceRun.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,29 +43,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Main.executor": "Debug",
-    "Application.MainWindow (1).executor": "Debug",
-    "Application.MainWindow.executor": "Debug",
-    "Application.org.hkijena.jipipe.launcher.Main.executor": "Debug",
-    "Maven.jipipe-launcher [clean].executor": "Run",
-    "Maven.jipipe-launcher [compile].executor": "Run",
-    "Maven.pom-jipipe-launcher [clean].executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "kotlin-language-version-configured": "true",
-    "last_directory_selection": "/home/ruman/src/jipipe-launcher/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/events",
-    "last_opened_file_path": "/home/ruman/src/jipipe-launcher/src/main/java/org/hkijena/jipipe/launcher/api",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Debug&quot;,
+    &quot;Application.MainWindow (1).executor&quot;: &quot;Debug&quot;,
+    &quot;Application.MainWindow.executor&quot;: &quot;Debug&quot;,
+    &quot;Application.org.hkijena.jipipe.launcher.Main.executor&quot;: &quot;Debug&quot;,
+    &quot;Maven.jipipe-launcher [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.jipipe-launcher [compile].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.pom-jipipe-launcher [clean].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;extract.method.default.visibility&quot;: &quot;private&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_directory_selection&quot;: &quot;/home/ruman/src/jipipe-launcher/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/events&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/ruman/src/jipipe-launcher/src/main/java/org/hkijena/jipipe/launcher/api&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propDebugger&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="org.hkijena.jipipe.launcher.api" />
@@ -132,7 +124,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="jdk-1.8.0_392-corretto-1.8.0_392-f644763e9732-5759c461" />
+        <option value="jdk-1.8.0_392-corretto-1.8.0_392-4caba194b151-023f9ed7" />
       </set>
     </attachedChunks>
   </component>
@@ -148,13 +140,45 @@
       <workItem from="1709848640979" duration="3730000" />
       <workItem from="1709890783012" duration="5761000" />
       <workItem from="1709903241333" duration="9619000" />
+      <workItem from="1710002881585" duration="1514000" />
+      <workItem from="1710005269723" duration="2920000" />
+      <workItem from="1710009791417" duration="12596000" />
     </task>
+    <task id="LOCAL-00001" summary="+ working installation and launching">
+      <option name="closed" value="true" />
+      <created>1709947900459</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1709947900459</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
+    <MESSAGE value="+ working installation and launching" />
+    <option name="LAST_COMMIT_MESSAGE" value="+ working installation and launching" />
+  </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/JIPipeInstanceUI.java</url>
+          <line>184</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/JIPipeInstanceUI.java</url>
+          <line>185</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="JIPipe.instance" language="JAVA" />

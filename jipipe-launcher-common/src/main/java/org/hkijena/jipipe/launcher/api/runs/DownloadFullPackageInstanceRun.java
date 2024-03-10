@@ -39,10 +39,8 @@ public class DownloadFullPackageInstanceRun extends AbstractJIPipeRunnable {
         progressInfo.log("Archive extension detected as " + downloadResult.getExtension());
 
         // Determine target path
-        Path instancesDirectory = JIPipeLauncherCommons.getInstance().getSettings().getDefaultInstanceDirectory().toAbsolutePath();
-        String instanceDirName = StringUtils.makeUniqueString(instance.getName().toLowerCase() + "-" + instance.getVersion(),
-                "-", s -> Files.exists(instancesDirectory.resolve(s)));
-        Path absoluteInstallationPath = instancesDirectory.resolve(instanceDirName);
+        Path absoluteInstallationPath = JIPipeLauncherCommons.getInstance().findNewInstanceDirectory(
+                instance.getName().toLowerCase() + "-" + instance.getVersion());
 
         // Extract archive
         progressInfo.log("Extracting archive ... " + downloadResult.getOutputFile());

@@ -34,7 +34,9 @@ public class LauncherUIUtils {
         button.setFont(new Font(Font.DIALOG, Font.PLAIN, 20));
         button.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4),
                 BorderFactory.createEmptyBorder(16, 16, 16, 16)));
-        button.addActionListener(e -> action.accept(button));
+        if(action != null) {
+            button.addActionListener(e -> action.accept(button));
+        }
         return button;
     }
 
@@ -45,7 +47,9 @@ public class LauncherUIUtils {
         button.setFont(new Font(Font.DIALOG, Font.PLAIN, 20));
         button.setBorder(BorderFactory.createCompoundBorder(new RoundedLineBorder(new Color(0xabb8c3), 1, 8),
                 BorderFactory.createEmptyBorder(12, 12, 12, 12)));
-        button.addActionListener(e -> action.accept(button));
+        if(action != null) {
+            button.addActionListener(e -> action.accept(button));
+        }
         return button;
     }
 }

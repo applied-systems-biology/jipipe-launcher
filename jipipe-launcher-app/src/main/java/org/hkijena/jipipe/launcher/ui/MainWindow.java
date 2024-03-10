@@ -3,6 +3,7 @@ package org.hkijena.jipipe.launcher.ui;
 import org.hkijena.jipipe.JIPipe;
 import org.hkijena.jipipe.api.notifications.JIPipeNotificationInbox;
 import org.hkijena.jipipe.extensions.parameters.StandardParametersPlugin;
+import org.hkijena.jipipe.extensions.settings.StandardSettingsPlugin;
 import org.hkijena.jipipe.launcher.api.JIPipeLauncherCommons;
 import org.hkijena.jipipe.ui.JIPipeWorkbench;
 import org.hkijena.jipipe.ui.components.SplashScreen;
@@ -38,7 +39,7 @@ public class MainWindow extends JFrame implements JIPipeWorkbench, WindowListene
 //        SplashScreen.getInstance().showSplash(null);
 
         // Init JIPipe
-        JIPipe.createLibNoImageJInstance(Arrays.asList(StandardParametersPlugin.class));
+        JIPipe.createLibNoImageJInstance(Arrays.asList(StandardParametersPlugin.class, StandardSettingsPlugin.class));
 
         // Init commons
         JIPipeLauncherCommons.getInstance().initialize();

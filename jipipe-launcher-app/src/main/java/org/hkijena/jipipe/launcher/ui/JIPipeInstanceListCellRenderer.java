@@ -82,8 +82,14 @@ public class JIPipeInstanceListCellRenderer extends JPanel implements ListCellRe
             nameLabel.setEnabled(value.isInstalled());
             versionLabel.setEnabled(value.isInstalled());
 
-            nameLabel.setText(StringUtils.orElse(value.getName(), "JIPipe"));
-            versionLabel.setText(value.getVersion());
+            if(value.isCustomized()) {
+                nameLabel.setText("JIPipe [" + StringUtils.orElse(value.getName(), "Custom") + "]");
+                versionLabel.setText(value.getVersion() + "-custom");
+            }
+            else {
+                nameLabel.setText(StringUtils.orElse(value.getName(), "JIPipe"));
+                versionLabel.setText(value.getVersion());
+            }
         }
 
 
