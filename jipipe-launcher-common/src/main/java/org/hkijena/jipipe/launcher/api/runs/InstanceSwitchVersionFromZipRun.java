@@ -9,24 +9,23 @@ import org.hkijena.jipipe.launcher.api.JIPipeLauncherCommons;
 import org.hkijena.jipipe.launcher.api.events.InstancesUpdatedEvent;
 import org.hkijena.jipipe.utils.ArchiveUtils;
 import org.hkijena.jipipe.utils.PathUtils;
-import org.hkijena.jipipe.utils.WebUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class InstanceSwitchVersionRun extends AbstractJIPipeRunnable {
+public class InstanceSwitchVersionFromZipRun extends AbstractJIPipeRunnable {
     private final JIPipeInstance instance;
-    private final JIPipeInstanceDownload download;
+    private final Path zipFile;
 
-    public InstanceSwitchVersionRun(JIPipeInstance instance, JIPipeInstanceDownload download) {
+    public InstanceSwitchVersionFromZipRun(JIPipeInstance instance, Path zipFile) {
         this.instance = instance;
-        this.download = download;
+        this.zipFile = zipFile;
     }
 
     @Override
     public String getTaskLabel() {
-        return "Switch version";
+        return "Switch version (ZIP)";
     }
 
     @Override
@@ -35,20 +34,19 @@ public class InstanceSwitchVersionRun extends AbstractJIPipeRunnable {
         Path jarDir = instance.getAbsoluteApplicationDirectory().resolve("jars");
 
         // Download and extract
-        JIPipeInstanceDownloadResult downloadResult = download.download(getProgressInfo());
         Path tmpDir = RuntimeSettings.generateTempDirectory("JIPipe-Launcher-Update");
-        if (downloadResult.getExtension().equals(".zip")) {
-            try {
-                ArchiveUtils.decompressZipFile(downloadResult.getOutputFile(), tmpDir, getProgressInfo().resolve("Extract package"));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            try {
-                ArchiveUtils.decompressTarGZ(downloadResult.getOutputFile(), tmpDir, getProgressInfo().resolve("Extract package"));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        try {
+            ArchiveUtils.decompressZipFile(zipFile, tmpDir, getProgressInfo().resolve("Extract package"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Check ZIP file
+        if(PathUtils.findFilesByExtensionIn(tmpDir, ".jar").isEmpty()) {
+            throw new RuntimeException("Invalid archive contents!");
+        }
+        if(!Files.isDirectory(tmpDir.resolve("dependencies"))) {
+            throw new RuntimeException("Invalid archive contents!");
         }
 
         // Delete the plugin
@@ -84,10 +82,13 @@ public class InstanceSwitchVersionRun extends AbstractJIPipeRunnable {
         }
 
         // Update the instance
-        instance.setVersion(download.getVersion());
+        instance.autoDetectVersion();
         JIPipeLauncherCommons.getInstance().writeSettings();
         JIPipeLauncherCommons.getInstance().getInstancesUpdatedEventEmitter()
                 .emit(new InstancesUpdatedEvent(JIPipeLauncherCommons.getInstance()));
+
+        // Cleanup
+        PathUtils.deleteDirectoryRecursively(tmpDir, getProgressInfo().resolve("Cleanup"));
 
     }
 }

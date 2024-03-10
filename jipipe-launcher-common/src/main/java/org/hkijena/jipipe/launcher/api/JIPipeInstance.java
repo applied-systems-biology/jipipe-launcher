@@ -205,4 +205,21 @@ public class JIPipeInstance {
                 .addArgument("org.hkijena.jipipe.JIPipeLauncher");
         startCommandLine(handler, commandLine);
     }
+
+    public void autoDetectVersion() {
+        // Auto-detect JIPipe
+        setVersion("unknown");
+
+        Path jipipePluginDir = getAbsoluteApplicationDirectory().resolve("plugins").resolve("JIPipe");
+        if (Files.isDirectory(jipipePluginDir)) {
+            for (Path path : PathUtils.findFilesByExtensionIn(jipipePluginDir, ".jar")) {
+                String fileName = path.getFileName().toString();
+                if (fileName.startsWith("jipipe-")) {
+                    String[] components = fileName.substring(0, fileName.length() - 4).split("-");
+                    setVersion(components[components.length - 1]);
+                    break;
+                }
+            }
+        }
+    }
 }

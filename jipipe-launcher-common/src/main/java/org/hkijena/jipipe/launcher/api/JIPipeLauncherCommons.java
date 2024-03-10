@@ -255,20 +255,7 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
             return "Could not find executable! Select the ImageJ application directory.";
         }
 
-        // Auto-detect JIPipe
-        instance.setVersion("unknown");
-
-        Path jipipePluginDir = instance.getAbsoluteApplicationDirectory().resolve("plugins").resolve("JIPipe");
-        if (Files.isDirectory(jipipePluginDir)) {
-            for (Path path : PathUtils.findFilesByExtensionIn(jipipePluginDir, ".jar")) {
-                String fileName = path.getFileName().toString();
-                if (fileName.startsWith("jipipe-")) {
-                    String[] components = fileName.substring(0, fileName.length() - 4).split("-");
-                    instance.setVersion(components[components.length - 1]);
-                    break;
-                }
-            }
-        }
+        instance.autoDetectVersion();
 
         // Register the instance
         getSettings().getInstalledInstances().add(instance);

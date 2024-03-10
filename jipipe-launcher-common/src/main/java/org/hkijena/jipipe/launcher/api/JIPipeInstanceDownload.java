@@ -17,7 +17,6 @@ import java.util.List;
 
 public class JIPipeInstanceDownload {
     private String name;
-    private String version;
     private String url;
     private List<String> urlMultiPart = new ArrayList<>();
     private String multiPartOutputName;
@@ -34,18 +33,8 @@ public class JIPipeInstanceDownload {
         this.multiPartOutputName = other.multiPartOutputName;
         this.type = other.type;
         this.operatingSystems = new ArrayList<>(other.operatingSystems);
-        this.version = other.version;
     }
 
-    @JsonGetter("version")
-    public String getVersion() {
-        return version;
-    }
-
-    @JsonSetter("version")
-    public void setVersion(String version) {
-        this.version = version;
-    }
 
     @JsonGetter("name")
     public String getName() {

@@ -7,10 +7,7 @@ import org.hkijena.jipipe.launcher.api.JIPipeInstance;
 import org.hkijena.jipipe.launcher.api.JIPipeInstanceDownload;
 import org.hkijena.jipipe.launcher.api.JIPipeInstanceDownloadType;
 import org.hkijena.jipipe.launcher.api.JIPipeLauncherCommons;
-import org.hkijena.jipipe.launcher.api.runs.DeleteDirectoryRun;
-import org.hkijena.jipipe.launcher.api.runs.DownloadFullPackageInstanceRun;
-import org.hkijena.jipipe.launcher.api.runs.DuplicateInstanceRun;
-import org.hkijena.jipipe.launcher.api.runs.InstanceSwitchVersionRun;
+import org.hkijena.jipipe.launcher.api.runs.*;
 import org.hkijena.jipipe.launcher.ui.utils.LauncherUIUtils;
 import org.hkijena.jipipe.ui.JIPipeWorkbench;
 import org.hkijena.jipipe.ui.JIPipeWorkbenchAccess;
@@ -19,7 +16,6 @@ import org.hkijena.jipipe.ui.components.ImageFrame;
 import org.hkijena.jipipe.ui.running.JIPipeRunExecuterUI;
 import org.hkijena.jipipe.ui.theme.ModernMetalTheme;
 import org.hkijena.jipipe.utils.*;
-import org.hkijena.jipipe.utils.ui.RoundedLineBorder;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -115,10 +111,14 @@ public class JIPipeInstanceUI extends ImageFrame implements JIPipeWorkbenchAcces
                     UIUtils.getIconFromResources("actions/tag.png"),
                     () -> labelInstalledInstanceIfNeeded("Please input the new name of this instance:")));
         }
-        popupMenu.add(UIUtils.createMenuItem("Switch version",
-                "Installs a different JIPipe version into the instance.",
+        popupMenu.add(UIUtils.createMenuItem("Switch version (download)",
+                "Installs a different JIPipe version into the instance from the online repository.",
                 UIUtils.getIconFromResources("actions/system-software-install.png"),
-                this::switchInstalledInstanceVersion));
+                this::switchInstalledInstanceVersionDownload));
+        popupMenu.add(UIUtils.createMenuItem("Switch version (*.zip)",
+                "Installs a different JIPipe version into the instance from a ZIP file.",
+                UIUtils.getIconFromResources("actions/system-software-install.png"),
+                this::switchInstalledInstanceVersionZip));
         popupMenu.add(UIUtils.createMenuItem("Duplicate",
                 "Duplicates the instance into a dedicated copy",
                 UIUtils.getIconFromResources("actions/edit-duplicate.png"),
@@ -158,6 +158,20 @@ public class JIPipeInstanceUI extends ImageFrame implements JIPipeWorkbenchAcces
                     instance.startJIPipe(new DefaultExecuteResultHandler());
                 });
         buttonPanel.add(runJIPipeButton);
+    }
+
+    private void switchInstalledInstanceVersionZip() {
+        if (!labelInstalledInstanceIfNeeded("<html>To switch the JIPipe version, you need to label this instance.<br/>" +
+                "Please input the label for this instance:</html>")) {
+            return;
+        }
+
+        Path zipFile = FileChooserSettings.openFile(this, FileChooserSettings.LastDirectoryKey.External, "Select JIPipe JAR *.zip", UIUtils.EXTENSION_FILTER_ZIP);
+
+        if(zipFile != null) {
+            InstanceSwitchVersionFromZipRun run = new InstanceSwitchVersionFromZipRun(instance, zipFile);
+            JIPipeRunExecuterUI.runInDialog(getWorkbench(), this, run);
+        }
     }
 
     private void duplicateInstalledInstance() {
@@ -219,7 +233,7 @@ public class JIPipeInstanceUI extends ImageFrame implements JIPipeWorkbenchAcces
         }
     }
 
-    private void switchInstalledInstanceVersion() {
+    private void switchInstalledInstanceVersionDownload() {
         if (!labelInstalledInstanceIfNeeded("<html>To switch the JIPipe version, you need to label this instance.<br/>" +
                 "Please input the label for this instance:</html>")) {
             return;
@@ -231,7 +245,6 @@ public class JIPipeInstanceUI extends ImageFrame implements JIPipeWorkbenchAcces
                 if(download.getType() == JIPipeInstanceDownloadType.JAR) {
                     JIPipeInstanceDownload copyDownload = new JIPipeInstanceDownload(download);
                     copyDownload.setName(availableInstance.getDisplayName() + " / " + availableInstance.getName() + " / " + availableInstance.getBranch());
-                    copyDownload.setVersion(availableInstance.getVersion());
                     model.addElement(copyDownload);
                 }
             }
@@ -252,7 +265,7 @@ public class JIPipeInstanceUI extends ImageFrame implements JIPipeWorkbenchAcces
 
         if(UIUtils.showConfirmDialog(this, "Switch version", new Dimension(640,
                 480), content) && jList.getSelectedValue() != null) {
-            InstanceSwitchVersionRun run = new InstanceSwitchVersionRun(instance, jList.getSelectedValue());
+            InstanceDownloadAndSwitchVersionRun run = new InstanceDownloadAndSwitchVersionRun(instance, jList.getSelectedValue());
             JIPipeRunExecuterUI.runInDialog(getWorkbench(), this, run);
         }
 
