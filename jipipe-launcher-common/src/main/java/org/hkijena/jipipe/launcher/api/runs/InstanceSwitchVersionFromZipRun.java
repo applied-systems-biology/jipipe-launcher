@@ -2,10 +2,7 @@ package org.hkijena.jipipe.launcher.api.runs;
 
 import org.hkijena.jipipe.api.AbstractJIPipeRunnable;
 import org.hkijena.jipipe.extensions.settings.RuntimeSettings;
-import org.hkijena.jipipe.launcher.api.JIPipeInstance;
-import org.hkijena.jipipe.launcher.api.JIPipeInstanceDownload;
-import org.hkijena.jipipe.launcher.api.JIPipeInstanceDownloadResult;
-import org.hkijena.jipipe.launcher.api.JIPipeLauncherCommons;
+import org.hkijena.jipipe.launcher.api.*;
 import org.hkijena.jipipe.launcher.api.events.InstancesUpdatedEvent;
 import org.hkijena.jipipe.utils.ArchiveUtils;
 import org.hkijena.jipipe.utils.PathUtils;
@@ -15,11 +12,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class InstanceSwitchVersionFromZipRun extends AbstractJIPipeRunnable {
-    private final JIPipeInstance instance;
+    private final JIPipeInstance targetInstance;
     private final Path zipFile;
 
-    public InstanceSwitchVersionFromZipRun(JIPipeInstance instance, Path zipFile) {
-        this.instance = instance;
+    public InstanceSwitchVersionFromZipRun(JIPipeInstance targetInstance, Path zipFile) {
+        this.targetInstance = targetInstance;
         this.zipFile = zipFile;
     }
 
@@ -30,8 +27,8 @@ public class InstanceSwitchVersionFromZipRun extends AbstractJIPipeRunnable {
 
     @Override
     public void run() {
-        Path pluginDir = instance.getAbsoluteApplicationDirectory().resolve("plugins").resolve("JIPipe");
-        Path jarDir = instance.getAbsoluteApplicationDirectory().resolve("jars");
+        Path pluginDir = targetInstance.getAbsoluteApplicationDirectory().resolve("plugins").resolve("JIPipe");
+        Path jarDir = targetInstance.getAbsoluteApplicationDirectory().resolve("jars");
 
         // Download and extract
         Path tmpDir = RuntimeSettings.generateTempDirectory("JIPipe-Launcher-Update");
@@ -82,7 +79,8 @@ public class InstanceSwitchVersionFromZipRun extends AbstractJIPipeRunnable {
         }
 
         // Update the instance
-        instance.autoDetectVersion();
+        targetInstance.autoDetectVersion();
+        targetInstance.setChangeLog(JIPipeLauncherCommons.getInstance().findChangeLog(targetInstance.getVersion()));
         JIPipeLauncherCommons.getInstance().writeSettings();
         JIPipeLauncherCommons.getInstance().getInstancesUpdatedEventEmitter()
                 .emit(new InstancesUpdatedEvent(JIPipeLauncherCommons.getInstance()));

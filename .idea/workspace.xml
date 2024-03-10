@@ -5,13 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a9a2b870-8528-4685-a3bd-44f2e7ed1a13" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/InstanceSwitchVersionFromZipRun.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeInstanceChangeLog.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/JIPipeInstanceUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/JIPipeInstanceUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeInstance.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeInstance.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeInstanceDownload.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeInstanceDownload.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeLauncherCommons.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeLauncherCommons.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/InstanceSwitchVersionRun.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/InstanceDownloadAndSwitchVersionRun.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeLauncherSettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeLauncherSettings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/InstanceDownloadAndSwitchVersionRun.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/InstanceDownloadAndSwitchVersionRun.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/InstanceSwitchVersionFromZipRun.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/InstanceSwitchVersionFromZipRun.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -140,6 +142,7 @@
       <workItem from="1710002881585" duration="1514000" />
       <workItem from="1710005269723" duration="2920000" />
       <workItem from="1710009791417" duration="18467000" />
+      <workItem from="1710075788040" duration="6094000" />
     </task>
     <task id="LOCAL-00001" summary="+ working installation and launching">
       <option name="closed" value="true" />
@@ -191,6 +194,8 @@
     <watches-manager>
       <configuration name="Application">
         <watch expression="JIPipe.instance" language="JAVA" />
+        <watch expression="JIPipeLauncherCommons.getInstance().findChangeLog(instance.getVersion())" language="JAVA" />
+        <watch expression="UIUtils.getIcon32FromResources(&quot;actions/documentinfo.png&quot;)" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>

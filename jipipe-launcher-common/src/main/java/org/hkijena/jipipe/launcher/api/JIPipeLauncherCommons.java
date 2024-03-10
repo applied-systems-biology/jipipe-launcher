@@ -6,7 +6,6 @@ import org.hkijena.jipipe.launcher.api.events.InstancesUpdatedEvent;
 import org.hkijena.jipipe.launcher.api.events.InstancesUpdatedEventEmitter;
 import org.hkijena.jipipe.launcher.api.runs.QueryAvailableInstancesRun;
 import org.hkijena.jipipe.ui.running.JIPipeRunnerQueue;
-import org.hkijena.jipipe.utils.PathUtils;
 import org.hkijena.jipipe.utils.StringUtils;
 import org.hkijena.jipipe.utils.json.JsonUtils;
 
@@ -158,6 +157,7 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
                     installed.getVersion())).collect(Collectors.toList());
             for (JIPipeInstance instance : installedWithVersion) {
                 instance.setDownloads(availableInstance.getDownloads());
+                instance.setChangeLog(availableInstance.getChangeLog());
             }
             if (installedWithVersion.isEmpty()) {
                 // Not installed --> add
@@ -263,5 +263,32 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
 
         instancesUpdatedEventEmitter.emit(new InstancesUpdatedEvent(this));
         return null;
+    }
+
+    public JIPipeInstanceChangeLog findChangeLog(String version) {
+        for (JIPipeInstance availableInstance : availableInstances) {
+            if(Objects.equals(availableInstance.getVersion(), version)) {
+                return availableInstance.getChangeLog();
+            }
+        }
+        return null;
+    }
+
+    public JIPipeInstanceDownload findUpdate(JIPipeInstance instance, boolean includeUnstable) {
+        JIPipeInstanceDownload result = null;
+        String resultVersion = instance.getVersion();
+        for (JIPipeInstance availableInstance : availableInstances) {
+            if(!includeUnstable && !availableInstance.isStable()) {
+                continue;
+            }
+            if(StringUtils.compareVersions(resultVersion, availableInstance.getVersion()) < 0) {
+                List<JIPipeInstanceDownload> compatibleDownloads = availableInstance.getCompatibleDownloads(JIPipeInstanceDownloadType.JAR);
+                if(!compatibleDownloads.isEmpty()) {
+                    result = compatibleDownloads.get(0);
+                    resultVersion = availableInstance.getVersion();
+                }
+            }
+        }
+        return result;
     }
 }

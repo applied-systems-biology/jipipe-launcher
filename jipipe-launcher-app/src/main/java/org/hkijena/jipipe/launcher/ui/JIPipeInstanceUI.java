@@ -3,25 +3,25 @@ package org.hkijena.jipipe.launcher.ui;
 import org.apache.commons.exec.DefaultExecuteResultHandler;
 import org.hkijena.jipipe.api.JIPipeProgressInfo;
 import org.hkijena.jipipe.extensions.settings.FileChooserSettings;
-import org.hkijena.jipipe.launcher.api.JIPipeInstance;
-import org.hkijena.jipipe.launcher.api.JIPipeInstanceDownload;
-import org.hkijena.jipipe.launcher.api.JIPipeInstanceDownloadType;
-import org.hkijena.jipipe.launcher.api.JIPipeLauncherCommons;
+import org.hkijena.jipipe.launcher.api.*;
 import org.hkijena.jipipe.launcher.api.runs.*;
 import org.hkijena.jipipe.launcher.ui.utils.LauncherUIUtils;
 import org.hkijena.jipipe.ui.JIPipeWorkbench;
 import org.hkijena.jipipe.ui.JIPipeWorkbenchAccess;
 import org.hkijena.jipipe.ui.components.AdvancedFileChooser;
+import org.hkijena.jipipe.ui.components.FormPanel;
 import org.hkijena.jipipe.ui.components.ImageFrame;
 import org.hkijena.jipipe.ui.running.JIPipeRunExecuterUI;
 import org.hkijena.jipipe.ui.theme.ModernMetalTheme;
 import org.hkijena.jipipe.utils.*;
+import org.hkijena.jipipe.utils.ui.RoundedLineBorder;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -44,13 +44,21 @@ public class JIPipeInstanceUI extends ImageFrame implements JIPipeWorkbenchAcces
     private void initialize() {
         setLayout(new BorderLayout());
 
-        // Top info
+        // Top logo
         ImageFrame logoPanel = new ImageFrame(UIUtils.getLogo(), false, SizeFitMode.Fit, true);
-        logoPanel.setMinimumSize(new Dimension(400, 250));
-        logoPanel.setPreferredSize(new Dimension(400, 250));
+        logoPanel.setMinimumSize(new Dimension(400, 200));
+        logoPanel.setPreferredSize(new Dimension(400, 200));
         logoPanel.setScaleFactor(0.7);
         logoPanel.setOpaque(false);
         add(logoPanel, BorderLayout.NORTH);
+
+        // Center info panel
+        FormPanel formPanel = new FormPanel(FormPanel.TRANSPARENT_BACKGROUND | FormPanel.WITH_SCROLLING);
+        formPanel.setBorder(BorderFactory.createEmptyBorder(32,32,32,32));
+        formPanel.getScrollPane().setOpaque(false);
+        formPanel.getScrollPane().getViewport().setOpaque(false);
+        initializeCenterPanel(formPanel);
+        add(formPanel, BorderLayout.CENTER);
 
         // Bottom button panel
         JPanel buttonPanel = new JPanel();
@@ -60,6 +68,77 @@ public class JIPipeInstanceUI extends ImageFrame implements JIPipeWorkbenchAcces
         add(buttonPanel, BorderLayout.SOUTH);
 
         initializeButtonPanel(buttonPanel);
+    }
+
+    private void initializeCenterPanel(FormPanel formPanel) {
+        if(instance != null) {
+            if(instance.isInstalled()) {
+                // Add update notification
+                boolean includeUnstable = JIPipeLauncherCommons.getInstance().getSettings().isUpdateToUnstable();
+                JIPipeInstanceDownload update = JIPipeLauncherCommons.getInstance().findUpdate(instance, includeUnstable);
+                if(update != null) {
+                    FormPanel.GroupHeaderPanel groupHeaderPanel = formPanel.addGroupHeader("Update available", UIUtils.getIcon32FromResources("status/gtk-dialog-info.png"));
+                    groupHeaderPanel.setDescription("A new JIPipe version is available. Click the 'Update' button to update your current instance.");
+                    groupHeaderPanel.addColumn(UIUtils.createButton("Update now", UIUtils.getIconFromResources("actions/cm_packfiles.png"), () -> {
+                        switchInstalledInstanceVersionDownload(includeUnstable);
+                    }));
+                }
+            }
+
+            // Add changelog
+            JIPipeInstanceChangeLog changeLog = JIPipeLauncherCommons.getInstance().findChangeLog(instance.getVersion());
+            if (changeLog != null) {
+                FormPanel.GroupHeaderPanel groupHeaderPanel = formPanel.addGroupHeader("Change log", UIUtils.getIcon32FromResources("actions/documentinfo.png"));
+                groupHeaderPanel.addColumn(UIUtils.createButton("Developer changelog", UIUtils.getIconFromResources("actions/open-in-new-window.png"), () -> {
+                    try {
+                        Desktop.getDesktop().browse(URI.create(changeLog.getUrlDev()));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }));
+                groupHeaderPanel.addColumn(UIUtils.createButton("Full changelog", UIUtils.getIconFromResources("actions/open-in-new-window.png"), () -> {
+                    try {
+                        Desktop.getDesktop().browse(URI.create(changeLog.getUrl()));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }));
+                initializeChangeLog(formPanel, changeLog);
+            }
+        }
+
+        formPanel.addVerticalGlue();
+    }
+
+
+    private void initializeChangeLog(FormPanel formPanel, JIPipeInstanceChangeLog changeLog) {
+        for (String item : changeLog.getSummary()) {
+            Icon icon;
+            String text;
+            if(item.startsWith("+ ")) {
+                icon = UIUtils.getIconFromResources("actions/add.png");
+                text = item.substring(2);
+            }
+            else if(item.startsWith("- ")) {
+                icon = UIUtils.getIconFromResources("actions/remove.png");
+                text = item.substring(2);
+            }
+            else if(item.startsWith("* ")) {
+                icon = UIUtils.getIconFromResources("actions/stock_right.png");
+                text = item.substring(2);
+            }
+            else {
+                icon = UIUtils.getIconFromResources("actions/stock_right.png");
+                text = item;
+            }
+
+            JLabel label = new JLabel(text, icon, JLabel.LEFT);
+            label.setOpaque(true);
+            label.setBackground(new Color(255,255,255,128));
+            label.setBorder(new RoundedLineBorder(new Color(255,255,255,135), 1, 4));
+
+            formPanel.addWideToForm(label);
+        }
     }
 
     private void initializeButtonPanel(JPanel buttonPanel) {
@@ -114,7 +193,7 @@ public class JIPipeInstanceUI extends ImageFrame implements JIPipeWorkbenchAcces
         popupMenu.add(UIUtils.createMenuItem("Switch version (download)",
                 "Installs a different JIPipe version into the instance from the online repository.",
                 UIUtils.getIconFromResources("actions/system-software-install.png"),
-                this::switchInstalledInstanceVersionDownload));
+                () -> switchInstalledInstanceVersionDownload(true)));
         popupMenu.add(UIUtils.createMenuItem("Switch version (*.zip)",
                 "Installs a different JIPipe version into the instance from a ZIP file.",
                 UIUtils.getIconFromResources("actions/system-software-install.png"),
@@ -233,7 +312,7 @@ public class JIPipeInstanceUI extends ImageFrame implements JIPipeWorkbenchAcces
         }
     }
 
-    private void switchInstalledInstanceVersionDownload() {
+    private void switchInstalledInstanceVersionDownload(boolean includeUnstable) {
         if (!labelInstalledInstanceIfNeeded("<html>To switch the JIPipe version, you need to label this instance.<br/>" +
                 "Please input the label for this instance:</html>")) {
             return;
@@ -241,6 +320,9 @@ public class JIPipeInstanceUI extends ImageFrame implements JIPipeWorkbenchAcces
 
         DefaultListModel<JIPipeInstanceDownload> model = new DefaultListModel<>();
         for (JIPipeInstance availableInstance : JIPipeLauncherCommons.getInstance().getSortedAvailableInstanceList()) {
+            if(!includeUnstable && !availableInstance.isStable()) {
+                continue;
+            }
             for (JIPipeInstanceDownload download : availableInstance.getDownloads()) {
                 if(download.getType() == JIPipeInstanceDownloadType.JAR) {
                     JIPipeInstanceDownload copyDownload = new JIPipeInstanceDownload(download);

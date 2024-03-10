@@ -15,11 +15,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class InstanceDownloadAndSwitchVersionRun extends AbstractJIPipeRunnable {
-    private final JIPipeInstance instance;
+    private final JIPipeInstance targetInstance;
     private final JIPipeInstanceDownload download;
 
-    public InstanceDownloadAndSwitchVersionRun(JIPipeInstance instance, JIPipeInstanceDownload download) {
-        this.instance = instance;
+    public InstanceDownloadAndSwitchVersionRun(JIPipeInstance targetInstance, JIPipeInstanceDownload download) {
+        this.targetInstance = targetInstance;
         this.download = download;
     }
 
@@ -30,8 +30,8 @@ public class InstanceDownloadAndSwitchVersionRun extends AbstractJIPipeRunnable 
 
     @Override
     public void run() {
-        Path pluginDir = instance.getAbsoluteApplicationDirectory().resolve("plugins").resolve("JIPipe");
-        Path jarDir = instance.getAbsoluteApplicationDirectory().resolve("jars");
+        Path pluginDir = targetInstance.getAbsoluteApplicationDirectory().resolve("plugins").resolve("JIPipe");
+        Path jarDir = targetInstance.getAbsoluteApplicationDirectory().resolve("jars");
 
         // Download and extract
         JIPipeInstanceDownloadResult downloadResult = download.download(getProgressInfo());
@@ -91,7 +91,8 @@ public class InstanceDownloadAndSwitchVersionRun extends AbstractJIPipeRunnable 
         }
 
         // Update the instance
-        instance.autoDetectVersion();
+        targetInstance.autoDetectVersion();
+        targetInstance.setChangeLog(JIPipeLauncherCommons.getInstance().findChangeLog(targetInstance.getVersion()));
         JIPipeLauncherCommons.getInstance().writeSettings();
         JIPipeLauncherCommons.getInstance().getInstancesUpdatedEventEmitter()
                 .emit(new InstancesUpdatedEvent(JIPipeLauncherCommons.getInstance()));

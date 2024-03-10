@@ -23,6 +23,7 @@ public class JIPipeInstance {
     private Path installDirectory;
     private Path applicationDirectory = Paths.get("Fiji.app");
     private List<JIPipeInstanceDownload> downloads = new ArrayList<>();
+    private JIPipeInstanceChangeLog changeLog = new JIPipeInstanceChangeLog();
 
     public JIPipeInstance() {
     }
@@ -37,6 +38,17 @@ public class JIPipeInstance {
         for (JIPipeInstanceDownload download : other.downloads) {
             this.downloads.add(new JIPipeInstanceDownload(download));
         }
+        this.changeLog = new JIPipeInstanceChangeLog(other.changeLog);
+    }
+
+    @JsonGetter("changelog")
+    public JIPipeInstanceChangeLog getChangeLog() {
+        return changeLog;
+    }
+
+    @JsonSetter("changelog")
+    public void setChangeLog(JIPipeInstanceChangeLog changeLog) {
+        this.changeLog = changeLog;
     }
 
     @JsonGetter("application-directory")
@@ -221,5 +233,9 @@ public class JIPipeInstance {
                 }
             }
         }
+    }
+
+    public boolean isStable() {
+        return "stable".equals(branch);
     }
 }

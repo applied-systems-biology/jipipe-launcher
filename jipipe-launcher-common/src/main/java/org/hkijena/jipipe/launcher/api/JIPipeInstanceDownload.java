@@ -35,7 +35,6 @@ public class JIPipeInstanceDownload {
         this.operatingSystems = new ArrayList<>(other.operatingSystems);
     }
 
-
     @JsonGetter("name")
     public String getName() {
         return name;

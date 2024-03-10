@@ -14,6 +14,7 @@ import java.util.List;
 
 public class JIPipeLauncherSettings extends AbstractJIPipeParameterCollection {
     private boolean offlineMode = false;
+    private boolean updateToUnstable = false;
     private String repositoryUrl = "https://raw.githubusercontent.com/applied-systems-biology/JIPipe-Repositories/main/launcher/instances.json";
     private Path defaultInstanceDirectory;
     private List<JIPipeInstance> installedInstances = new ArrayList<>();
@@ -27,6 +28,19 @@ public class JIPipeLauncherSettings extends AbstractJIPipeParameterCollection {
 
     public void setTo(JIPipeLauncherSettings other) {
         this.offlineMode = other.offlineMode;
+    }
+
+    @SetJIPipeDocumentation(name = "Update to unstable versions", description = "If enabled, updates are offered for unstable versions")
+    @JIPipeParameter("update-to-unstable")
+    @JsonGetter("update-to-unstable")
+    public boolean isUpdateToUnstable() {
+        return updateToUnstable;
+    }
+
+    @JIPipeParameter("update-to-unstable")
+    @JsonSetter("update-to-unstable")
+    public void setUpdateToUnstable(boolean updateToUnstable) {
+        this.updateToUnstable = updateToUnstable;
     }
 
     @JsonGetter("installed-instances")
