@@ -1,0 +1,103 @@
+#!/bin/bash
+
+JRE_URL="https://github.com/applied-systems-biology/jipipe-launcher/releases/download/current/openjdk-8-linux.tar.gz"
+UPDATER_URL="https://github.com/applied-systems-biology/jipipe-launcher/releases/download/current/jipipe-launcher-updater.jar"
+
+
+DIR="$(dirname "$(readlink -f "$0")")"
+cd "$DIR" || exit 1
+
+# Find target directory
+DATA_DIR="$XDG_DATA_HOME"
+
+if [ -z "$DATA_DIR" ]; then
+    DATA_DIR="$HOME/.local/share"
+fi
+
+INSTANCE_DIR="$DATA_DIR/JIPipe/launcher"
+ICONS_DIR="$DATA_DIR/icons/hicolor"
+APPS_DIR="$DATA_DIR/applications"
+
+(
+# =================================================================
+echo "# Removing old installations ... (instances are preserved)"
+if [ -e "$INSTANCE_DIR" ]; then
+    rm -rvf "$INSTANCE_DIR" || exit 1
+fi
+
+# =================================================================
+echo "10"
+echo "# Creating in $INSTANCE_DIR ..."
+mkdir -p "$INSTANCE_DIR" || exit 1
+
+# =================================================================
+echo "20"
+echo "# Creating in $INSTANCE_DIR ... downloading JRE (Adoptium 8u402b06)"
+wget -O "$INSTANCE_DIR/jre.tar.gz" "$JRE_URL"
+
+# =================================================================
+echo "40"
+echo "# Creating in $INSTANCE_DIR ... extracting JRE (Adoptium 8u402b06)"
+pushd $INSTANCE_DIR || exit 1
+tar -xvf jre.tar.gz
+rm jre.tar.gz
+popd || exit 1
+
+# =================================================================
+echo "60"
+echo "# Creating in $INSTANCE_DIR ... downloading updater"
+wget -O "$INSTANCE_DIR/jipipe-launcher-updater.jar" "$UPDATER_URL"
+SHA1=$(sha1sum "$INSTANCE_DIR/jipipe-launcher-updater.jar" | awk '{print $1}')
+echo "$SHA1" > "$INSTANCE_DIR/jipipe-launcher-updater.jar.sha1"
+
+
+# =================================================================
+echo "80"
+echo "# Copying icons ..."
+
+mkdir -p "$ICONS_DIR/16x16/apps"
+mkdir -p "$ICONS_DIR/32x32/apps"
+mkdir -p "$ICONS_DIR/64x64/apps"
+mkdir -p "$ICONS_DIR/128x128/apps"
+cp -f "$PWD/../share/jipipe-installer/jipipe16.png" "$ICONS_DIR/16x16/apps/jipipe.png" || exit 1
+cp -f "$PWD/../share/jipipe-installer/jipipe32.png" "$ICONS_DIR/32x32/apps/jipipe.png" || exit 1
+cp -f "$PWD/../share/jipipe-installer/jipipe64.png" "$ICONS_DIR/64x64/apps/jipipe.png" || exit 1
+cp -f "$PWD/../share/jipipe-installer/jipipe128.png" "$ICONS_DIR/128x128/apps/jipipe.png" || exit 1
+
+# =================================================================
+echo "90"
+echo "# Creating application launcher entry ..."
+cat <<EOF > "$APPS_DIR/jipipe-launcher.desktop"
+[Desktop Entry]
+Name=JIPipe
+Exec=$INSTANCE_DIR/jre/bin/java -jar $INSTANCE_DIR/jipipe-launcher-updater.jar
+Icon=jipipe
+Type=Application
+Categories=Science;
+Comment=Visually design image processing workflows
+Terminal=false
+StartupNotify=true
+NoDisplay=false
+EOF
+
+# =================================================================
+echo "100"
+echo "# Done. Launching now."
+sleep 2
+
+$INSTANCE_DIR/jre/bin/java -jar $INSTANCE_DIR/jipipe-launcher-updater.jar &
+disown
+
+) |
+zenity --progress \
+  --title="JIPipe Installer" \
+  --text="Waiting ..." \
+  --percentage=0 \
+  --auto-close \
+  --auto-kill \
+  --width=500 \
+  --height=150
+
+(( $? != 0 )) && zenity --error --text="Error in zenity command."
+
+exit 0 
