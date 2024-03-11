@@ -2,7 +2,7 @@ package org.hkijena.jipipe.launcher.api.runs;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hkijena.jipipe.api.AbstractJIPipeRunnable;
-import org.hkijena.jipipe.launcher.api.JIPipeInstance;
+import org.hkijena.jipipe.launcher.api.repo.JIPipeInstance;
 import org.hkijena.jipipe.launcher.api.JIPipeLauncherCommons;
 import org.hkijena.jipipe.utils.WebUtils;
 import org.hkijena.jipipe.utils.json.JsonUtils;

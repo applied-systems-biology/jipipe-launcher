@@ -1,15 +1,17 @@
 package org.hkijena.jipipe.launcher.ui;
 
-import org.hkijena.jipipe.launcher.api.JIPipeInstance;
-import org.hkijena.jipipe.launcher.api.JIPipeInstanceDownloadType;
+import org.hkijena.jipipe.launcher.api.repo.JIPipeInstance;
+import org.hkijena.jipipe.launcher.api.repo.JIPipeInstanceDownloadType;
 import org.hkijena.jipipe.launcher.api.JIPipeLauncherCommons;
 import org.hkijena.jipipe.launcher.api.JIPipeLauncherSettings;
 import org.hkijena.jipipe.launcher.api.events.InstancesUpdatedEvent;
 import org.hkijena.jipipe.launcher.api.events.InstancesUpdatedEventListener;
+import org.hkijena.jipipe.launcher.api.runs.CreateApplicationIconsRun;
 import org.hkijena.jipipe.ui.JIPipeWorkbench;
 import org.hkijena.jipipe.ui.JIPipeWorkbenchPanel;
 import org.hkijena.jipipe.ui.components.markdown.MarkdownDocument;
 import org.hkijena.jipipe.ui.parameters.ParameterPanel;
+import org.hkijena.jipipe.ui.running.JIPipeRunnerQueue;
 import org.hkijena.jipipe.ui.running.JIPipeRunnerQueueButton;
 import org.hkijena.jipipe.utils.AutoResizeSplitPane;
 import org.hkijena.jipipe.utils.UIUtils;
@@ -32,6 +34,10 @@ public class LauncherPanel extends JIPipeWorkbenchPanel implements InstancesUpda
         reloadList();
         if(!commons.getSettings().isOfflineMode()) {
             commons.queryAvailableInstances();
+            commons.boostrapUpdateInstaller();
+        }
+        if(commons.getSettings().isCreateLauncherIcons()) {
+            JIPipeRunnerQueue.getInstance().enqueue(new CreateApplicationIconsRun());
         }
     }
 

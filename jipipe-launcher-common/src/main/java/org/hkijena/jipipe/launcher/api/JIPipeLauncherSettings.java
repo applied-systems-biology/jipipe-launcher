@@ -6,7 +6,7 @@ import org.hkijena.jipipe.api.SetJIPipeDocumentation;
 import org.hkijena.jipipe.api.parameters.AbstractJIPipeParameterCollection;
 import org.hkijena.jipipe.api.parameters.JIPipeParameter;
 import org.hkijena.jipipe.extensions.parameters.library.primitives.StringParameterSettings;
-import org.hkijena.jipipe.extensions.parameters.library.primitives.list.StringList;
+import org.hkijena.jipipe.launcher.api.repo.JIPipeInstance;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -15,7 +15,9 @@ import java.util.List;
 public class JIPipeLauncherSettings extends AbstractJIPipeParameterCollection {
     private boolean offlineMode = false;
     private boolean updateToUnstable = false;
+    private boolean createLauncherIcons = true;
     private String repositoryUrl = "https://raw.githubusercontent.com/applied-systems-biology/JIPipe-Repositories/main/launcher/instances.json";
+    private String boostrapRepositoryUrl = "https://raw.githubusercontent.com/applied-systems-biology/JIPipe-Repositories/main/launcher/boostrap.json";
     private Path defaultInstanceDirectory;
     private List<JIPipeInstance> installedInstances = new ArrayList<>();
 
@@ -23,11 +25,49 @@ public class JIPipeLauncherSettings extends AbstractJIPipeParameterCollection {
     }
 
     public JIPipeLauncherSettings(JIPipeLauncherSettings other) {
-        setTo(other);
+        this.offlineMode = other.offlineMode;
+        this.updateToUnstable = other.updateToUnstable;
+        this.createLauncherIcons = other.createLauncherIcons;
+        this.repositoryUrl = other.repositoryUrl;
+        this.boostrapRepositoryUrl = other.boostrapRepositoryUrl;
+        this.defaultInstanceDirectory = other.defaultInstanceDirectory;
+        this.installedInstances = other.installedInstances;
     }
 
     public void setTo(JIPipeLauncherSettings other) {
         this.offlineMode = other.offlineMode;
+        this.updateToUnstable = other.updateToUnstable;
+        this.createLauncherIcons = other.createLauncherIcons;
+        this.repositoryUrl = other.repositoryUrl;
+        this.boostrapRepositoryUrl = other.boostrapRepositoryUrl;
+        this.defaultInstanceDirectory = other.defaultInstanceDirectory;
+//        this.installedInstances = other.installedInstances;
+    }
+
+    @SetJIPipeDocumentation(name = "Create launcher icons", description = "Windows/Linux: create desktop and application launcher icons")
+    @JIPipeParameter("create-launcher-icons")
+    @JsonGetter("create-launcher-icons")
+    public boolean isCreateLauncherIcons() {
+        return createLauncherIcons;
+    }
+
+    @JIPipeParameter("create-launcher-icons")
+    @JsonSetter("create-launcher-icons")
+    public void setCreateLauncherIcons(boolean createLauncherIcons) {
+        this.createLauncherIcons = createLauncherIcons;
+    }
+
+    @SetJIPipeDocumentation(name = "Repository URL (Launcher)", description = "Points to the repository for the launcher auto-update")
+    @JsonGetter("boostrap-repository-url")
+    @JIPipeParameter("boostrap-repository-url")
+    public String getBoostrapRepositoryUrl() {
+        return boostrapRepositoryUrl;
+    }
+
+    @JsonSetter("boostrap-repository-url")
+    @JIPipeParameter("boostrap-repository-url")
+    public void setBoostrapRepositoryUrl(String boostrapRepositoryUrl) {
+        this.boostrapRepositoryUrl = boostrapRepositoryUrl;
     }
 
     @SetJIPipeDocumentation(name = "Update to unstable versions", description = "If enabled, updates are offered for unstable versions")

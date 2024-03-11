@@ -1,4 +1,4 @@
-package org.hkijena.jipipe.launcher.api;
+package org.hkijena.jipipe.launcher.api.repo;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;

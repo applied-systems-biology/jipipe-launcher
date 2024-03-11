@@ -8,6 +8,7 @@ import org.hkijena.jipipe.launcher.api.JIPipeLauncherCommons;
 import org.hkijena.jipipe.ui.JIPipeWorkbench;
 import org.hkijena.jipipe.ui.components.SplashScreen;
 import org.hkijena.jipipe.ui.components.tabs.DocumentTabPane;
+import org.hkijena.jipipe.ui.running.JIPipeRunnerQueue;
 import org.hkijena.jipipe.ui.theme.JIPipeUITheme;
 import org.hkijena.jipipe.utils.UIUtils;
 import org.scijava.Context;
@@ -93,6 +94,12 @@ public class MainWindow extends JFrame implements JIPipeWorkbench, WindowListene
 
     @Override
     public void windowClosing(WindowEvent e) {
+        if(!JIPipeRunnerQueue.getInstance().isEmpty()) {
+            if(JOptionPane.showConfirmDialog(this, "The software is currently still working on a few processes.\n" +
+                    "Are you sure that you want to exit the application?", "Exit JIPipe Launcher", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
+                return;
+            }
+        }
         Runtime.getRuntime().halt(0);
     }
 

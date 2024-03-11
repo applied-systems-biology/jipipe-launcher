@@ -1,14 +1,26 @@
 package org.hkijena.jipipe.launcher.api;
 
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecuteResultHandler;
+import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.lang3.SystemUtils;
 import org.hkijena.jipipe.api.JIPipeRunnable;
 import org.hkijena.jipipe.launcher.api.events.InstancesUpdatedEvent;
 import org.hkijena.jipipe.launcher.api.events.InstancesUpdatedEventEmitter;
+import org.hkijena.jipipe.launcher.api.repo.JIPipeInstance;
+import org.hkijena.jipipe.launcher.api.repo.JIPipeInstanceChangeLog;
+import org.hkijena.jipipe.launcher.api.repo.JIPipeInstanceDownload;
+import org.hkijena.jipipe.launcher.api.repo.JIPipeInstanceDownloadType;
 import org.hkijena.jipipe.launcher.api.runs.QueryAvailableInstancesRun;
+import org.hkijena.jipipe.launcher.api.runs.UpdateInstallerRun;
+import org.hkijena.jipipe.launcher.api.runs.UpdateLauncherRun;
 import org.hkijena.jipipe.ui.running.JIPipeRunnerQueue;
+import org.hkijena.jipipe.utils.JIPipeResourceManager;
+import org.hkijena.jipipe.utils.PathUtils;
 import org.hkijena.jipipe.utils.StringUtils;
 import org.hkijena.jipipe.utils.json.JsonUtils;
 
+import javax.swing.Timer;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,7 +30,7 @@ import java.util.stream.Collectors;
 
 public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListener {
     private static JIPipeLauncherCommons INSTANCE;
-
+    private final JIPipeResourceManager resources = new JIPipeResourceManager(JIPipeLauncherCommons.class, "/org/hkijena/jipipe/launcher");
     private Path settingsPath;
     private Path installerPath;
     private Path launcherPath;
@@ -37,6 +49,10 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
         initializeBootstrapPaths();
     }
 
+    public JIPipeResourceManager getResources() {
+        return resources;
+    }
+
     private void initializeBootstrapPaths() {
         if (SystemUtils.IS_OS_WINDOWS) {
             launcherPath = Paths.get(System.getenv("APPDATA")).resolve("JIPipe")
@@ -45,11 +61,11 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
                     .resolve("launcher").resolve("JIPipeInstaller.exe");
         } else if (SystemUtils.IS_OS_LINUX) {
             if (System.getProperties().containsKey("XDG_DATA_HOME") && !StringUtils.isNullOrEmpty(System.getProperty("XDG_DATA_HOME"))) {
-                launcherPath = Paths.get(System.getProperty("XDG_DATA_HOME")).resolve(".local")
-                        .resolve("share").resolve("JIPipe")
+                launcherPath = Paths.get(System.getProperty("XDG_DATA_HOME"))
+                        .resolve("JIPipe")
                         .resolve("launcher").resolve("jipipe-launcher.AppImage");
-                installerPath = Paths.get(System.getProperty("XDG_DATA_HOME")).resolve(".local")
-                        .resolve("share").resolve("JIPipe")
+                installerPath = Paths.get(System.getProperty("XDG_DATA_HOME"))
+                        .resolve("JIPipe")
                         .resolve("launcher").resolve("JIPipeInstaller.AppImage");
             } else {
                 launcherPath = Paths.get(System.getProperty("user.home")).resolve(".local")
@@ -76,8 +92,8 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
                 instancePath = Paths.get(System.getenv("APPDATA")).resolve("JIPipe").resolve("instances");
             } else if (SystemUtils.IS_OS_LINUX) {
                 if (System.getProperties().containsKey("XDG_DATA_HOME") && !StringUtils.isNullOrEmpty(System.getProperty("XDG_DATA_HOME"))) {
-                    instancePath = Paths.get(System.getProperty("XDG_DATA_HOME")).resolve(".local")
-                            .resolve("share").resolve("JIPipe").resolve("instances");
+                    instancePath = Paths.get(System.getProperty("XDG_DATA_HOME"))
+                            .resolve("JIPipe").resolve("instances");
                 } else {
                     instancePath = Paths.get(System.getProperty("user.home")).resolve(".local")
                             .resolve("share").resolve("JIPipe").resolve("instances");
@@ -158,6 +174,14 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
 
     public Path getInstallerPath() {
         return installerPath;
+    }
+
+    public Path getInstallerSha1Path() {
+        return installerPath.getParent().resolve(installerPath.getFileName() + ".sha1");
+    }
+
+    public Path getLauncherSha1Path() {
+        return launcherPath.getParent().resolve(launcherPath.getFileName() + ".sha1");
     }
 
     public Path getLauncherPath() {
@@ -354,4 +378,47 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
         }
         return result;
     }
+
+    public void boostrapUpdateInstaller() {
+        JIPipeRunnerQueue.getInstance().enqueue(new UpdateInstallerRun());
+    }
+
+    public void bootstrapUpdateLauncher() {
+        JIPipeRunnerQueue.getInstance().enqueue(new UpdateLauncherRun());
+    }
+
+    public void launchBoostrap(Path applicationPath, String... arguments) {
+
+        Path workDirectory = applicationPath.getParent();
+
+        if(SystemUtils.IS_OS_MAC_OSX) {
+            throw new UnsupportedOperationException("not yet implemented");
+        }
+
+        DefaultExecuteResultHandler handler = new DefaultExecuteResultHandler();
+        CommandLine commandLine = new CommandLine(applicationPath.toFile());
+        commandLine.addArguments(arguments);
+        DefaultExecutor executor = new DefaultExecutor();
+
+        try {
+            if(!SystemUtils.IS_OS_WINDOWS) {
+                PathUtils.makeUnixExecutable(applicationPath);
+            }
+            executor.setWorkingDirectory(workDirectory.toFile());
+            executor.execute(commandLine, handler);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void exit() {
+        Runtime.getRuntime().halt(0);
+    }
+
+    public void exitLater(int ms) {
+        Timer timer = new Timer(ms, e -> Runtime.getRuntime().halt(0));
+        timer.start();
+    }
+
+
 }

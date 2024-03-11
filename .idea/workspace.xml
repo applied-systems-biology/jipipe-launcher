@@ -5,14 +5,34 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a9a2b870-8528-4685-a3bd-44f2e7ed1a13" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/dist/build.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dist/linux/build.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dist/linux/jipipe-installer" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dist/linux/jipipe-installer.desktop" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dist/linux/jipipe-launcher" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dist/linux/jipipe-launcher.desktop" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dist/linux/jipipe.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/boostrap/JIPipeLauncherBoostrapRepo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/CreateApplicationIconsRun.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/UpdateInstallerRun.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/UpdateLauncherRun.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/ui/RunQueueProgressUI.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/resources/org/hkijena/jipipe/launcher/icons-128/jipipe.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/resources/org/hkijena/jipipe/launcher/icons-32/jipipe.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/resources/org/hkijena/jipipe/launcher/icons-64/jipipe.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/resources/org/hkijena/jipipe/launcher/icons/jipipe.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jipipe-launcher-installer/src/main/java/org/hkijena/jipipe/launcher/installer/InstallerPanel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/JIPipeInstanceDownloadListCellRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/JIPipeInstanceDownloadListCellRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/JIPipeInstanceListCellRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/JIPipeInstanceListCellRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/JIPipeInstanceUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/JIPipeInstanceUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/LauncherPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/LauncherPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/MainWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/MainWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeInstance.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/repo/JIPipeInstance.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeInstanceChangeLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/repo/JIPipeInstanceChangeLog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeInstanceDownload.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/repo/JIPipeInstanceDownload.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeInstanceDownloadResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/repo/JIPipeInstanceDownloadResult.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeInstanceDownloadType.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/repo/JIPipeInstanceDownloadType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeLauncherCommons.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeLauncherCommons.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeLauncherSettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeLauncherSettings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/DownloadFullPackageInstanceRun.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/DownloadFullPackageInstanceRun.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/InstanceDownloadAndSwitchVersionRun.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/InstanceDownloadAndSwitchVersionRun.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/InstanceSwitchVersionFromZipRun.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/InstanceSwitchVersionFromZipRun.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/QueryAvailableInstancesRun.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/QueryAvailableInstancesRun.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jipipe-launcher-installer/src/main/java/org/hkijena/jipipe/launcher/installer/MainWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-installer/src/main/java/org/hkijena/jipipe/launcher/installer/MainWindow.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,34 +66,36 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Debug&quot;,
-    &quot;Application.MainWindow (1).executor&quot;: &quot;Debug&quot;,
-    &quot;Application.MainWindow.executor&quot;: &quot;Debug&quot;,
-    &quot;Application.org.hkijena.jipipe.launcher.Main.executor&quot;: &quot;Debug&quot;,
-    &quot;Application.org.hkijena.jipipe.launcher.installer.MainWindow.executor&quot;: &quot;Debug&quot;,
-    &quot;Maven.jipipe-launcher [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.jipipe-launcher [compile].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.pom-jipipe-launcher [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.pom-jipipe-launcher [package].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.pom-jipipe-launcher [validate].executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;extract.method.default.visibility&quot;: &quot;private&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_directory_selection&quot;: &quot;/home/ruman/src/jipipe-launcher/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/events&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/ruman/src/jipipe-launcher&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;project.propDebugger&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Debug",
+    "Application.MainWindow (1).executor": "Debug",
+    "Application.MainWindow.executor": "Debug",
+    "Application.org.hkijena.jipipe.launcher.Main.executor": "Debug",
+    "Application.org.hkijena.jipipe.launcher.installer.MainWindow.executor": "Debug",
+    "Maven.jipipe-launcher [clean].executor": "Run",
+    "Maven.jipipe-launcher [compile].executor": "Run",
+    "Maven.jipipe-launcher-installer [package].executor": "Run",
+    "Maven.pom-jipipe-launcher [clean].executor": "Run",
+    "Maven.pom-jipipe-launcher [package].executor": "Run",
+    "Maven.pom-jipipe-launcher [test].executor": "Run",
+    "Maven.pom-jipipe-launcher [validate].executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "extract.method.default.visibility": "private",
+    "kotlin-language-version-configured": "true",
+    "last_directory_selection": "/home/ruman/src/jipipe-launcher/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/events",
+    "last_opened_file_path": "/home/ruman/src/jipipe-launcher",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "project.propDebugger",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="org.hkijena.jipipe.launcher.api" />
@@ -91,6 +113,7 @@
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="org.hkijena.jipipe.launcher.api.runs" />
+      <recent name="org.hkijena.jipipe.launcher.ui" />
       <recent name="org.hkijena.jipipe.launcher.api" />
       <recent name="org.hkijena.jipipe.launcher.utils" />
     </key>
@@ -149,7 +172,6 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="jdk-1.8.0_392-corretto-1.8.0_392-4caba194b151-023f9ed7" />
         <option value="jdk-1.8.0_392-corretto-1.8.0_392-f644763e9732-5759c461" />
       </set>
     </attachedChunks>
@@ -170,6 +192,7 @@
       <workItem from="1710005269723" duration="2920000" />
       <workItem from="1710009791417" duration="18467000" />
       <workItem from="1710075788040" duration="11797000" />
+      <workItem from="1710167223173" duration="11208000" />
     </task>
     <task id="LOCAL-00001" summary="+ working installation and launching">
       <option name="closed" value="true" />

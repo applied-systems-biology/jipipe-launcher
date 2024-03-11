@@ -2,9 +2,9 @@ package org.hkijena.jipipe.launcher.api.runs;
 
 import org.hkijena.jipipe.api.AbstractJIPipeRunnable;
 import org.hkijena.jipipe.extensions.settings.RuntimeSettings;
-import org.hkijena.jipipe.launcher.api.JIPipeInstance;
-import org.hkijena.jipipe.launcher.api.JIPipeInstanceDownload;
-import org.hkijena.jipipe.launcher.api.JIPipeInstanceDownloadResult;
+import org.hkijena.jipipe.launcher.api.repo.JIPipeInstance;
+import org.hkijena.jipipe.launcher.api.repo.JIPipeInstanceDownload;
+import org.hkijena.jipipe.launcher.api.repo.JIPipeInstanceDownloadResult;
 import org.hkijena.jipipe.launcher.api.JIPipeLauncherCommons;
 import org.hkijena.jipipe.launcher.api.events.InstancesUpdatedEvent;
 import org.hkijena.jipipe.utils.ArchiveUtils;

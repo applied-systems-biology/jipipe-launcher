@@ -1,4 +1,4 @@
-package org.hkijena.jipipe.launcher.api;
+package org.hkijena.jipipe.launcher.api.repo;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
@@ -18,6 +18,8 @@ import java.util.List;
 public class JIPipeInstanceDownload {
     private String name;
     private String url;
+
+    private String sha1;
     private List<String> urlMultiPart = new ArrayList<>();
     private String multiPartOutputName;
     private JIPipeInstanceDownloadType type = JIPipeInstanceDownloadType.FullPackage;
@@ -29,10 +31,21 @@ public class JIPipeInstanceDownload {
     public JIPipeInstanceDownload(JIPipeInstanceDownload other) {
         this.name = other.name;
         this.url = other.url;
+        this.sha1 = other.sha1;
         this.urlMultiPart = new ArrayList<>(other.urlMultiPart);
         this.multiPartOutputName = other.multiPartOutputName;
         this.type = other.type;
         this.operatingSystems = new ArrayList<>(other.operatingSystems);
+    }
+
+    @JsonGetter("sha1")
+    public String getSha1() {
+        return sha1;
+    }
+
+    @JsonSetter("sha1")
+    public void setSha1(String sha1) {
+        this.sha1 = sha1;
     }
 
     @JsonGetter("name")

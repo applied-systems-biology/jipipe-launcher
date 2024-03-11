@@ -1,6 +1,6 @@
 package org.hkijena.jipipe.launcher.ui;
 
-import org.hkijena.jipipe.launcher.api.JIPipeInstance;
+import org.hkijena.jipipe.launcher.api.repo.JIPipeInstance;
 import org.hkijena.jipipe.ui.theme.ModernMetalTheme;
 import org.hkijena.jipipe.utils.StringUtils;
 import org.hkijena.jipipe.utils.UIUtils;

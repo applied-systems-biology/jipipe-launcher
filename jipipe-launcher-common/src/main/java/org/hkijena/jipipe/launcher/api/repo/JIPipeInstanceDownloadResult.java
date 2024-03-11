@@ -1,4 +1,4 @@
-package org.hkijena.jipipe.launcher.api;
+package org.hkijena.jipipe.launcher.api.repo;
 
 import java.nio.file.Path;
 

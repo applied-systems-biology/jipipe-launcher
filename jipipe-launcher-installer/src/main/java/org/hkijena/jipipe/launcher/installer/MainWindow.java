@@ -7,6 +7,7 @@ import org.hkijena.jipipe.extensions.settings.StandardSettingsPlugin;
 import org.hkijena.jipipe.launcher.api.JIPipeLauncherCommons;
 import org.hkijena.jipipe.ui.JIPipeWorkbench;
 import org.hkijena.jipipe.ui.components.tabs.DocumentTabPane;
+import org.hkijena.jipipe.ui.running.JIPipeRunnerQueue;
 import org.hkijena.jipipe.ui.theme.JIPipeUITheme;
 import org.hkijena.jipipe.utils.UIUtils;
 import org.scijava.Context;
@@ -19,28 +20,12 @@ import java.util.Arrays;
 
 public class MainWindow extends JFrame implements JIPipeWorkbench, WindowListener {
 
-    public MainWindow() {
-        setTitle("JIPipe Launcher");
+    public MainWindow(boolean launchMode) {
+        setTitle("JIPipe Boostrap");
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(this);
-    }
-    public static void main(String[] args) {
-        // UI setup
-        JIPipeUITheme.ModernLight.install();
 
-        // Init JIPipe
-        JIPipe.createLibNoImageJInstance(Arrays.asList(StandardParametersPlugin.class, StandardSettingsPlugin.class));
-
-        // Init commons
-        JIPipeLauncherCommons.getInstance().initialize();
-
-        // Start main window
-        MainWindow window = new MainWindow();
-        window.setIconImage(UIUtils.getJIPipeIcon128());
-        window.pack();
-        window.setSize(800,600);
-        window.setLocationRelativeTo(null);
-        window.setVisible(true);
+        setContentPane(new InstallerPanel(this, launchMode));
     }
 
     @Override
@@ -85,6 +70,12 @@ public class MainWindow extends JFrame implements JIPipeWorkbench, WindowListene
 
     @Override
     public void windowClosing(WindowEvent e) {
+        if(!JIPipeRunnerQueue.getInstance().isEmpty()) {
+            if(JOptionPane.showConfirmDialog(this, "The software is currently still working on a few processes.\n" +
+                    "Are you sure that you want to exit the application?", "Exit JIPipe Bootstrap", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
+                return;
+            }
+        }
         Runtime.getRuntime().halt(0);
     }
 
@@ -111,5 +102,25 @@ public class MainWindow extends JFrame implements JIPipeWorkbench, WindowListene
     @Override
     public void windowDeactivated(WindowEvent e) {
 
+    }
+
+    public static void main(String[] args) {
+
+        // UI setup
+        JIPipeUITheme.ModernLight.install();
+
+        // Init JIPipe
+        JIPipe.createLibNoImageJInstance(Arrays.asList(StandardParametersPlugin.class, StandardSettingsPlugin.class));
+
+        // Init commons
+        JIPipeLauncherCommons.getInstance().initialize();
+
+        // Start main window
+        MainWindow window = new MainWindow(Arrays.asList(args).contains("--launch-jipipe"));
+        window.setIconImage(UIUtils.getJIPipeIcon128());
+        window.pack();
+        window.setSize(640,480);
+        window.setLocationRelativeTo(null);
+        window.setVisible(true);
     }
 }
