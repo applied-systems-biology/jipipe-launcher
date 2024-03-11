@@ -1,6 +1,5 @@
 package org.hkijena.jipipe.launcher.api.runs;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.hkijena.jipipe.api.AbstractJIPipeRunnable;
 import org.hkijena.jipipe.extensions.settings.RuntimeSettings;
@@ -21,7 +20,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Objects;
 
-public class UpdateInstallerRun extends AbstractJIPipeRunnable {
+public class UpdateUpdaterRun extends AbstractJIPipeRunnable {
     @Override
     public String getTaskLabel() {
         return "Update installer";
@@ -41,7 +40,7 @@ public class UpdateInstallerRun extends AbstractJIPipeRunnable {
             throw new RuntimeException(e);
         }
 
-        JIPipeInstanceDownload installerDownload = repo.getInstallerDownload();
+        JIPipeInstanceDownload installerDownload = repo.getLauncherUpdaterDownload();
 
         if(installerDownload == null) {
             getProgressInfo().log("--> No installer found!");
@@ -49,14 +48,14 @@ public class UpdateInstallerRun extends AbstractJIPipeRunnable {
         }
 
         boolean needsUpdate = false;
-        if(!Files.exists(JIPipeLauncherCommons.getInstance().getInstallerPath()) || !Files.isRegularFile(JIPipeLauncherCommons.getInstance().getInstallerSha1Path())) {
-            getProgressInfo().log(JIPipeLauncherCommons.getInstance().getInstallerPath() + " does not exist / not tagged with SHA1 -> download installer");
+        if(!Files.exists(JIPipeLauncherCommons.getInstance().getInstallerJarPath()) || !Files.isRegularFile(JIPipeLauncherCommons.getInstance().getInstallerJarSha1Path())) {
+            getProgressInfo().log(JIPipeLauncherCommons.getInstance().getInstallerJarPath() + " does not exist / not tagged with SHA1 -> download installer");
             needsUpdate = true;
         }
         else {
             try {
                 // Check SHA
-                String currentSha1 = new String(Files.readAllBytes(JIPipeLauncherCommons.getInstance().getInstallerSha1Path()), StandardCharsets.UTF_8);
+                String currentSha1 = new String(Files.readAllBytes(JIPipeLauncherCommons.getInstance().getInstallerJarSha1Path()), StandardCharsets.UTF_8);
                 String wantedSha1 = installerDownload.getSha1();
 
                 if(!Objects.equals(currentSha1, wantedSha1)) {
@@ -77,43 +76,21 @@ public class UpdateInstallerRun extends AbstractJIPipeRunnable {
         }
 
         // Create directories
-        PathUtils.ensureParentDirectoriesExist(JIPipeLauncherCommons.getInstance().getInstallerPath());
+        PathUtils.ensureParentDirectoriesExist(JIPipeLauncherCommons.getInstance().getInstallerJarPath());
 
-        if(SystemUtils.IS_OS_WINDOWS || SystemUtils.IS_OS_LINUX) {
+        {
             JIPipeInstanceDownloadResult downloadResult = installerDownload.download(getProgressInfo());
 
             // Delete old installer
             try {
-                Files.deleteIfExists(JIPipeLauncherCommons.getInstance().getInstallerPath());
+                Files.deleteIfExists(JIPipeLauncherCommons.getInstance().getInstallerJarPath());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
 
             // Copy new installer
             try {
-                Files.copy(downloadResult.getOutputFile(), JIPipeLauncherCommons.getInstance().getInstallerPath());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            // Delete downloaded file
-            try {
-                Files.delete(downloadResult.getOutputFile());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        else if(SystemUtils.IS_OS_MAC_OSX) {
-            JIPipeInstanceDownloadResult downloadResult = installerDownload.download(getProgressInfo());
-
-            // Delete old installer
-            if(Files.exists(JIPipeLauncherCommons.getInstance().getInstallerPath())) {
-                PathUtils.deleteDirectoryRecursively(JIPipeLauncherCommons.getInstance().getInstallerPath(), getProgressInfo().resolve("Delete old installer"));
-            }
-
-            // Extract archive
-            try {
-                ArchiveUtils.decompressZipFile(downloadResult.getOutputFile(), JIPipeLauncherCommons.getInstance().getInstallerPath().getParent(), getProgressInfo());
+                Files.copy(downloadResult.getOutputFile(), JIPipeLauncherCommons.getInstance().getInstallerJarPath());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -128,7 +105,8 @@ public class UpdateInstallerRun extends AbstractJIPipeRunnable {
 
         // Write new SHA1
         try {
-            Files.write(JIPipeLauncherCommons.getInstance().getInstallerSha1Path(), installerDownload.getSha1().getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE);
+            Files.write(JIPipeLauncherCommons.getInstance().getInstallerJarSha1Path(),
+                    installerDownload.getSha1().getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

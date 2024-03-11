@@ -1,7 +1,8 @@
 #!/bin/bash
 
 OPEN_JDK_URL=https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u402-b06/OpenJDK8U-jre_x64_windows_hotspot_8u402b06.zip
-LAUNCH4J_URL=https://kumisystems.dl.sourceforge.net/project/launch4j/launch4j-3/3.50/launch4j-3.50-linux-x64.tgz
+WARP_PACKER_URL=https://github.com/dgiagio/warp/releases/download/v0.3.0/linux-x64.warp-packer
+RESOURCE_HACKER_URL=https://www.angusj.com/resourcehacker/resource_hacker.zip
 
 # Delete the source JARs
 rm ../../jipipe-launcher-app/target/*-sources.jar
@@ -10,16 +11,24 @@ rm ../../jipipe-launcher-app/target/original-*.jar
 rm ../../jipipe-launcher-installer/target/*-sources.jar
 rm ../../jipipe-launcher-installer/target/original-*.jar
 
-# Prepare Launch4J
-if [ -d "launch4j" ]; then
-  echo "launch4j directory detected"
+# Prepare warp-packer
+if [ -e "warp-packer" ]; then
+  echo "warp-packer detected"
 else
-  echo "launch4j directory not detected. Downloading $LAUNCH4J_URL"
-  wget -O launch4j.tar.gz "$LAUNCH4J_URL"
-  tar -xvf launch4j.tar.gz
-  rm launch4j.tar.gz
-  dos2unix launch4j/launch4j
-  dos2unix launch4j/launch4jc
+  echo "warp-packer not detected. Downloading $WARP_PACKER_URL"
+  wget -O warp-packer "$WARP_PACKER_URL"
+  chmod +x warp-packer
+fi
+
+# Prepare resource hacker
+if [ -e "ResourceHacker.exe" ]; then
+  echo "ResourceHacker.exe detected"
+else
+  echo "ResourceHacker.exe not detected. Downloading $RESOURCE_HACKER_URL"
+  wget -O resource_hacker.zip "$RESOURCE_HACKER_URL"
+  unzip -d resource_hacker resource_hacker.zip
+  cp resource_hacker/ResourceHacker.exe .
+  rm -rvf resource_hacker resource_hacker.zip
 fi
 
 # Prepare JRE
@@ -33,34 +42,35 @@ else
   rm jre.zip
 fi
 
-# # JIPipe Launcher
-# LAUNCHER_APPDIR="$PWD/JIPipeLauncher.AppDir"
-# mkdir -p "$LAUNCHER_APPDIR/usr/bin"
-# cp -rv jre "$LAUNCHER_APPDIR/usr/bin/jre"
-# cp -v jipipe.png "$LAUNCHER_APPDIR"
-# cp -v jipipe-launcher.desktop "$LAUNCHER_APPDIR"
-# cp -v jipipe-launcher "$LAUNCHER_APPDIR/usr/bin/jipipe-launcher"
-# cp -v ../../jipipe-launcher-app/target/*.jar "$LAUNCHER_APPDIR/usr/bin/jipipe-launcher.jar"
-# cp -v AppRun "$LAUNCHER_APPDIR"
+# JIPipe Launcher
+rm -rvf bundle
+mkdir bundle
+cp -rv jre bundle/jre
+cp -v jipipe-launcher.cmd bundle/run.cmd
+cp -v ../../jipipe-launcher-app/target/*.jar bundle/jipipe-launcher.jar
+unix2dos bundle/run.cmd
+./warp-packer --arch windows-x64 --input_dir bundle --exec run.cmd --output JIPipeLauncher.exe
 
-# chmod +x "$LAUNCHER_APPDIR/usr/bin/jipipe-launcher"
-# chmod +x "$LAUNCHER_APPDIR/usr/bin/jipipe-launcher.jar"
+rm JIPipeLauncher.original.exe
+mv JIPipeLauncher.exe JIPipeLauncher.original.exe
+wine64 ResourceHacker.exe -open JIPipeLauncher.original.exe -save JIPipeLauncher.exe -action addskip -res jipipe.ico -mask ICONGROUP,MAINICON,
 
-# rm JIPipeLauncher.AppImage
-# ./appimagetool-x86_64.AppImage JIPipeLauncher.AppDir JIPipeLauncher.AppImage
+exit
 
-# # JIPipe Installer
-# LAUNCHER_APPDIR="$PWD/JIPipeInstaller.AppDir"
-# mkdir -p "$LAUNCHER_APPDIR/usr/bin"
-# cp -rv jre "$LAUNCHER_APPDIR/usr/bin/jre"
-# cp -v jipipe.png "$LAUNCHER_APPDIR"
-# cp -v jipipe-installer.desktop "$LAUNCHER_APPDIR"
-# cp -v jipipe-installer "$LAUNCHER_APPDIR/usr/bin/jipipe-installer"
-# cp -v ../../jipipe-launcher-installer/target/*.jar "$LAUNCHER_APPDIR/usr/bin/jipipe-installer.jar"
-# cp -v AppRun "$LAUNCHER_APPDIR"
+# JIPipe Installer
+rm -rvf bundle
+mkdir bundle
+cp -rv jre bundle/jre
+cp -v jipipe-installer.cmd bundle/run.cmd
+cp -v ../../jipipe-launcher-installer/target/*.jar bundle/jipipe-installer.jar
+unix2dos bundle/run.cmd
+./warp-packer --arch windows-x64 --input_dir bundle --exec run.cmd --output JIPipeInstaller.exe
 
-# chmod +x "$LAUNCHER_APPDIR/usr/bin/jipipe-installer"
-# chmod +x "$LAUNCHER_APPDIR/usr/bin/jipipe-installer.jar"
+rm JIPipeInstaller.original.exe
+mv JIPipeInstaller.exe JIPipeInstaller.original.exe
+wine64 ResourceHacker.exe -open JIPipeInstaller.original.exe -save JIPipeInstaller.exe -action addskip -res jipipe.ico -mask ICONGROUP,MAINICON,
 
-# rm JIPipeInstaller.AppImage
-# ./appimagetool-x86_64.AppImage JIPipeInstaller.AppDir JIPipeInstaller.AppImage
+# Delete the bundles
+rm -rvf bundle
+
+

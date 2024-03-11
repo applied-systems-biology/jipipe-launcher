@@ -12,7 +12,7 @@ import org.hkijena.jipipe.launcher.api.repo.JIPipeInstanceChangeLog;
 import org.hkijena.jipipe.launcher.api.repo.JIPipeInstanceDownload;
 import org.hkijena.jipipe.launcher.api.repo.JIPipeInstanceDownloadType;
 import org.hkijena.jipipe.launcher.api.runs.QueryAvailableInstancesRun;
-import org.hkijena.jipipe.launcher.api.runs.UpdateInstallerRun;
+import org.hkijena.jipipe.launcher.api.runs.UpdateUpdaterRun;
 import org.hkijena.jipipe.launcher.api.runs.UpdateLauncherRun;
 import org.hkijena.jipipe.ui.running.JIPipeRunnerQueue;
 import org.hkijena.jipipe.utils.JIPipeResourceManager;
@@ -32,8 +32,7 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
     private static JIPipeLauncherCommons INSTANCE;
     private final JIPipeResourceManager resources = new JIPipeResourceManager(JIPipeLauncherCommons.class, "/org/hkijena/jipipe/launcher");
     private Path settingsPath;
-    private Path installerPath;
-    private Path launcherPath;
+    private Path boostrapPath;
     private JIPipeLauncherSettings settings = new JIPipeLauncherSettings();
     private final List<JIPipeInstance> availableInstances = new ArrayList<>();
 
@@ -55,31 +54,21 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
 
     private void initializeBootstrapPaths() {
         if (SystemUtils.IS_OS_WINDOWS) {
-            launcherPath = Paths.get(System.getenv("APPDATA")).resolve("JIPipe")
-                    .resolve("launcher").resolve("jipipe-launcher.exe");
-            installerPath = Paths.get(System.getenv("APPDATA")).resolve("JIPipe")
-                    .resolve("launcher").resolve("JIPipeInstaller.exe");
+            boostrapPath = Paths.get(System.getenv("APPDATA")).resolve("JIPipe")
+                    .resolve("launcher");
         } else if (SystemUtils.IS_OS_LINUX) {
             if (System.getProperties().containsKey("XDG_DATA_HOME") && !StringUtils.isNullOrEmpty(System.getProperty("XDG_DATA_HOME"))) {
-                launcherPath = Paths.get(System.getProperty("XDG_DATA_HOME"))
+                boostrapPath = Paths.get(System.getProperty("XDG_DATA_HOME"))
                         .resolve("JIPipe")
-                        .resolve("launcher").resolve("jipipe-launcher.AppImage");
-                installerPath = Paths.get(System.getProperty("XDG_DATA_HOME"))
-                        .resolve("JIPipe")
-                        .resolve("launcher").resolve("JIPipeInstaller.AppImage");
+                        .resolve("launcher");
             } else {
-                launcherPath = Paths.get(System.getProperty("user.home")).resolve(".local")
+                boostrapPath = Paths.get(System.getProperty("user.home")).resolve(".local")
                         .resolve("share").resolve("JIPipe")
-                        .resolve("launcher").resolve("jipipe-launcher.AppImage");
-                installerPath = Paths.get(System.getProperty("user.home")).resolve(".local")
-                        .resolve("share").resolve("JIPipe")
-                        .resolve("launcher").resolve("JIPipeInstaller.AppImage");
+                        .resolve("launcher");
             }
         } else if (SystemUtils.IS_OS_MAC_OSX) {
-            launcherPath = Paths.get(System.getProperty("user.home")).resolve("Library").resolve("Application Support")
-                    .resolve("JIPipe Launcher").resolve("launcher").resolve("jipipe-launcher.App");
-            installerPath = Paths.get(System.getProperty("user.home")).resolve("Library").resolve("Application Support")
-                    .resolve("JIPipe Launcher").resolve("launcher").resolve("JIPipe.App");
+            boostrapPath = Paths.get(System.getProperty("user.home")).resolve("Library").resolve("Application Support")
+                    .resolve("JIPipe Launcher").resolve("launcher");
         } else {
             throw new UnsupportedOperationException("Unknown operating system!");
         }
@@ -172,20 +161,20 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
         }
     }
 
-    public Path getInstallerPath() {
-        return installerPath;
+    public Path getInstallerJarPath() {
+        return boostrapPath.resolve("jipipe-launcher-updater.jar");
     }
 
-    public Path getInstallerSha1Path() {
-        return installerPath.getParent().resolve(installerPath.getFileName() + ".sha1");
+    public Path getInstallerJarSha1Path() {
+        return boostrapPath.resolve("jipipe-launcher-updater.jar.sha1");
     }
 
-    public Path getLauncherSha1Path() {
-        return launcherPath.getParent().resolve(launcherPath.getFileName() + ".sha1");
+    public Path getLauncherJarSha1Path() {
+        return boostrapPath.resolve("jipipe-launcher.jar");
     }
 
-    public Path getLauncherPath() {
-        return launcherPath;
+    public Path getLauncherJarPath() {
+        return boostrapPath.resolve("jipipe-launcher.jar.sha1");
     }
 
     public Path getSettingsPath() {
@@ -295,12 +284,8 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
         try {
             if (!instance.isCustomized()) {
                 if (installedInstanceLocatedInDefaultDirectory(instance)) {
-                    String newDirectoryName = StringUtils.safeJsonify(newName.trim().toLowerCase());
-                    if (newDirectoryName.length() > 16) {
-                        newDirectoryName = newDirectoryName.substring(0, 16);
-                    }
-
-                    Path newDirectory = findNewInstanceDirectory(instance.getInstallDirectory().getFileName() + "-" + newDirectoryName);
+                    String newDirectoryName = StringUtils.safeJsonify("jipipe-" + instance.getVersion() + "-" + newName.trim().toLowerCase());
+                    Path newDirectory = findNewInstanceDirectory(newDirectoryName);
                     Files.move(instance.getInstallDirectory(), newDirectory);
                     instance.setInstallDirectory(newDirectory);
                 }
@@ -380,24 +365,39 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
     }
 
     public void boostrapUpdateInstaller() {
-        JIPipeRunnerQueue.getInstance().enqueue(new UpdateInstallerRun());
+        JIPipeRunnerQueue.getInstance().enqueue(new UpdateUpdaterRun());
     }
 
     public void bootstrapUpdateLauncher() {
         JIPipeRunnerQueue.getInstance().enqueue(new UpdateLauncherRun());
     }
 
-    public void launchBoostrap(Path applicationPath, String... arguments) {
+    public Path getBoostrapPath() {
+        return boostrapPath;
+    }
 
-        Path workDirectory = applicationPath.getParent();
+    public void launchLauncher() {
+        Path jarPath = getLauncherJarPath();
+        Path workDirectory = jarPath.getParent();
+        Path applicationPath;
 
-        if(SystemUtils.IS_OS_MAC_OSX) {
-            throw new UnsupportedOperationException("not yet implemented");
+        if(SystemUtils.IS_OS_WINDOWS) {
+            applicationPath = boostrapPath.resolve("jre").resolve("bin").resolve("javaw.exe");
+        }
+        else if(SystemUtils.IS_OS_LINUX) {
+            applicationPath = boostrapPath.resolve("jre").resolve("bin").resolve("java");
+        }
+        else if(SystemUtils.IS_OS_MAC_OSX) {
+            applicationPath = boostrapPath.resolve("jre").resolve("Contents").resolve("Home").resolve("bin").resolve("java");
+        }
+        else {
+            throw new UnsupportedOperationException("Unknown operating system!");
         }
 
         DefaultExecuteResultHandler handler = new DefaultExecuteResultHandler();
         CommandLine commandLine = new CommandLine(applicationPath.toFile());
-        commandLine.addArguments(arguments);
+        commandLine.addArgument("-jar");
+        commandLine.addArgument(jarPath.toString());
         DefaultExecutor executor = new DefaultExecutor();
 
         try {

@@ -48,14 +48,14 @@ public class UpdateLauncherRun extends AbstractJIPipeRunnable {
         }
 
         boolean needsUpdate = false;
-        if(!Files.exists(JIPipeLauncherCommons.getInstance().getLauncherPath()) || !Files.isRegularFile(JIPipeLauncherCommons.getInstance().getLauncherSha1Path())) {
-            getProgressInfo().log(JIPipeLauncherCommons.getInstance().getLauncherPath() + " does not exist / not tagged with SHA1 -> download launcher");
+        if(!Files.exists(JIPipeLauncherCommons.getInstance().getLauncherJarPath()) || !Files.isRegularFile(JIPipeLauncherCommons.getInstance().getLauncherJarSha1Path())) {
+            getProgressInfo().log(JIPipeLauncherCommons.getInstance().getLauncherJarPath() + " does not exist / not tagged with SHA1 -> download launcher");
             needsUpdate = true;
         }
         else {
             try {
                 // Check SHA
-                String currentSha1 = new String(Files.readAllBytes(JIPipeLauncherCommons.getInstance().getLauncherSha1Path()), StandardCharsets.UTF_8);
+                String currentSha1 = new String(Files.readAllBytes(JIPipeLauncherCommons.getInstance().getLauncherJarSha1Path()), StandardCharsets.UTF_8);
                 String wantedSha1 = launcherDownload.getSha1();
 
                 if(!Objects.equals(currentSha1, wantedSha1)) {
@@ -76,43 +76,21 @@ public class UpdateLauncherRun extends AbstractJIPipeRunnable {
         }
 
         // Create directories
-        PathUtils.ensureParentDirectoriesExist(JIPipeLauncherCommons.getInstance().getLauncherPath());
+        PathUtils.ensureParentDirectoriesExist(JIPipeLauncherCommons.getInstance().getLauncherJarPath());
 
-        if(SystemUtils.IS_OS_WINDOWS || SystemUtils.IS_OS_LINUX) {
+        {
             JIPipeInstanceDownloadResult downloadResult = launcherDownload.download(getProgressInfo());
 
             // Delete old launcher
             try {
-                Files.deleteIfExists(JIPipeLauncherCommons.getInstance().getLauncherPath());
+                Files.deleteIfExists(JIPipeLauncherCommons.getInstance().getLauncherJarPath());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
 
             // Copy new launcher
             try {
-                Files.copy(downloadResult.getOutputFile(), JIPipeLauncherCommons.getInstance().getLauncherPath());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            // Delete downloaded file
-            try {
-                Files.delete(downloadResult.getOutputFile());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        else if(SystemUtils.IS_OS_MAC_OSX) {
-            JIPipeInstanceDownloadResult downloadResult = launcherDownload.download(getProgressInfo());
-
-            // Delete old launcher
-            if(Files.exists(JIPipeLauncherCommons.getInstance().getLauncherPath())) {
-                PathUtils.deleteDirectoryRecursively(JIPipeLauncherCommons.getInstance().getLauncherPath(), getProgressInfo().resolve("Delete old launcher"));
-            }
-
-            // Extract archive
-            try {
-                ArchiveUtils.decompressZipFile(downloadResult.getOutputFile(), JIPipeLauncherCommons.getInstance().getLauncherPath().getParent(), getProgressInfo());
+                Files.copy(downloadResult.getOutputFile(), JIPipeLauncherCommons.getInstance().getLauncherJarPath());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -127,7 +105,8 @@ public class UpdateLauncherRun extends AbstractJIPipeRunnable {
 
         // Write new SHA1
         try {
-            Files.write(JIPipeLauncherCommons.getInstance().getLauncherSha1Path(), launcherDownload.getSha1().getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE);
+            Files.write(JIPipeLauncherCommons.getInstance().getLauncherJarSha1Path(),
+                    launcherDownload.getSha1().getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

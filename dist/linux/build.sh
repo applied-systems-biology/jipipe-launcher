@@ -21,52 +21,15 @@ else
 fi
 
 # Prepare AppRun
-if [ -e "AppRun" ]; then
+if [ -e "JIPipeInstaller.AppDir/AppRun" ]; then
   echo "AppRun found"
 else 
-  wget -O AppRun "$APPRUN_URL"
-  chmod +x AppRun
+  wget -O JIPipeInstaller.AppDir/AppRun "$APPRUN_URL"
+  chmod +x JIPipeInstaller.AppDir/AppRun
 fi 
 
-# Prepare JRE
-if [ -d "jre" ]; then
-  echo "JDK directory detected"
-else
-  echo "JDK directory not detected. Downloading $OPEN_JDK_URL"
-  wget -O jre.tar.gz "$OPEN_JDK_URL"
-  tar -xvf jre.tar.gz
-  mv jdk8u* jre
-  rm jre.tar.gz
-fi
-
-# JIPipe Launcher
-LAUNCHER_APPDIR="$PWD/JIPipeLauncher.AppDir"
-mkdir -p "$LAUNCHER_APPDIR/usr/bin"
-cp -rv jre "$LAUNCHER_APPDIR/usr/bin/jre"
-cp -v jipipe.png "$LAUNCHER_APPDIR"
-cp -v jipipe-launcher.desktop "$LAUNCHER_APPDIR"
-cp -v jipipe-launcher "$LAUNCHER_APPDIR/usr/bin/jipipe-launcher"
-cp -v ../../jipipe-launcher-app/target/*.jar "$LAUNCHER_APPDIR/usr/bin/jipipe-launcher.jar"
-cp -v AppRun "$LAUNCHER_APPDIR"
-
-chmod +x "$LAUNCHER_APPDIR/usr/bin/jipipe-launcher"
-chmod +x "$LAUNCHER_APPDIR/usr/bin/jipipe-launcher.jar"
-
-rm JIPipeLauncher.AppImage
-./appimagetool-x86_64.AppImage JIPipeLauncher.AppDir JIPipeLauncher.AppImage
-
-# JIPipe Installer
-LAUNCHER_APPDIR="$PWD/JIPipeInstaller.AppDir"
-mkdir -p "$LAUNCHER_APPDIR/usr/bin"
-cp -rv jre "$LAUNCHER_APPDIR/usr/bin/jre"
-cp -v jipipe.png "$LAUNCHER_APPDIR"
-cp -v jipipe-installer.desktop "$LAUNCHER_APPDIR"
-cp -v jipipe-installer "$LAUNCHER_APPDIR/usr/bin/jipipe-installer"
-cp -v ../../jipipe-launcher-installer/target/*.jar "$LAUNCHER_APPDIR/usr/bin/jipipe-installer.jar"
-cp -v AppRun "$LAUNCHER_APPDIR"
-
-chmod +x "$LAUNCHER_APPDIR/usr/bin/jipipe-installer"
-chmod +x "$LAUNCHER_APPDIR/usr/bin/jipipe-installer.jar"
+# JIPipe Boostrap (Installer)
+chmod +x JIPipeInstaller.AppDir/usr/bin/jipipe-installer
 
 rm JIPipeInstaller.AppImage
-./appimagetool-x86_64.AppImage JIPipeInstaller.AppDir JIPipeInstaller.AppImage
+ARCH=x86_64 ./appimagetool-x86_64.AppImage JIPipeInstaller.AppDir JIPipeInstaller.AppImage

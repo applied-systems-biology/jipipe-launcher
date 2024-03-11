@@ -1,4 +1,4 @@
-package org.hkijena.jipipe.launcher.installer;
+package org.hkijena.jipipe.launcher.updater;
 
 import org.hkijena.jipipe.JIPipe;
 import org.hkijena.jipipe.api.notifications.JIPipeNotificationInbox;
@@ -21,11 +21,11 @@ import java.util.Arrays;
 public class MainWindow extends JFrame implements JIPipeWorkbench, WindowListener {
 
     public MainWindow(boolean launchMode) {
-        setTitle("JIPipe Boostrap");
+        setTitle("JIPipe Launcher Updater");
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(this);
 
-        setContentPane(new InstallerPanel(this, launchMode));
+        setContentPane(new UpdaterPanel(this));
     }
 
     @Override
@@ -116,7 +116,7 @@ public class MainWindow extends JFrame implements JIPipeWorkbench, WindowListene
         JIPipeLauncherCommons.getInstance().initialize();
 
         // Start main window
-        MainWindow window = new MainWindow(Arrays.asList(args).contains("--launch-jipipe"));
+        MainWindow window = new MainWindow(true);
         window.setIconImage(UIUtils.getJIPipeIcon128());
         window.pack();
         window.setSize(640,480);

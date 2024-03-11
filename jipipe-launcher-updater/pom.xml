@@ -7,11 +7,11 @@
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>jipipe-launcher-installer</artifactId>
+    <artifactId>jipipe-launcher-updater</artifactId>
     <version>1.0.0</version>
 
-    <name>jipipe-launcher-installer</name>
-    <description>JIPipe Launcher Installer Application</description>
+    <name>jipipe-launcher-updater</name>
+    <description>JIPipe Launcher Updater Application</description>
     <inceptionYear>2024</inceptionYear>
     <url>https://www.jipipe.org/</url>
 
@@ -82,7 +82,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <license.licenseName>bsd_2</license.licenseName>
         <license.copyrightOwners>N/A</license.copyrightOwners>
-        <license.projectName>jipipe-launcher-installer</license.projectName>
+        <license.projectName>jipipe-launcher-updater</license.projectName>
     </properties>
 
     <build>
@@ -105,7 +105,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.hkijena.jipipe.launcher.installer.MainWindow</mainClass>
+                                    <mainClass>org.hkijena.jipipe.launcher.updater.MainWindow</mainClass>
                                 </transformer>
                             </transformers>
                             <filters>

@@ -2,7 +2,6 @@ package org.hkijena.jipipe.launcher.api.runs;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.hkijena.jipipe.api.AbstractJIPipeRunnable;
-import org.hkijena.jipipe.api.parameters.AbstractJIPipeParameterCollection;
 import org.hkijena.jipipe.launcher.api.JIPipeLauncherCommons;
 import org.hkijena.jipipe.utils.BufferedImageUtils;
 import org.hkijena.jipipe.utils.PathUtils;
@@ -11,8 +10,6 @@ import org.hkijena.jipipe.utils.StringUtils;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -20,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
+@Deprecated
 public class CreateApplicationIconsRun extends AbstractJIPipeRunnable {
     @Override
     public String getTaskLabel() {
@@ -51,7 +49,7 @@ public class CreateApplicationIconsRun extends AbstractJIPipeRunnable {
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.append("[Desktop Entry]\n")
                         .append("Name=JIPipe\n")
-                        .append("Exec=").append(JIPipeLauncherCommons.getInstance().getInstallerPath()).append(" --launch-jipipe\n")
+                        .append("Exec=").append(JIPipeLauncherCommons.getInstance().getInstallerJarPath()).append(" --launch-jipipe\n")
                         .append("Icon=jipipe\n")
                         .append("Type=Application\n")
                         .append("Categories=Science;\n")

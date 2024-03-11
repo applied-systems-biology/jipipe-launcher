@@ -1,7 +1,0 @@
-#!/bin/bash
- 
-DIR="$(dirname "$(readlink -f "$0")")"
-cd "$DIR" || exit 1
-./jre/bin/java -jar jipipe-launcher.jar "$@" &
-disown
-exit 0 
