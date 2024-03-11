@@ -5,7 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a9a2b870-8528-4685-a3bd-44f2e7ed1a13" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/jipipe-launcher-installer/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-installer/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dist/build.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dist/linux/build.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dist/linux/jipipe-installer" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dist/linux/jipipe-installer.desktop" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dist/linux/jipipe-launcher" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dist/linux/jipipe-launcher.desktop" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dist/linux/jipipe.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -220,7 +227,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710161968426</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="* fix">
+      <option name="closed" value="true" />
+      <created>1710162349951</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1710162349951</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

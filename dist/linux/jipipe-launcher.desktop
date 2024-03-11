@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=JIPipe Launcher
+Exec=jipipe-launcher
+Icon=jipipe
+Type=Application
+Categories=Science;
+Comment=Launcher for JIPipe
+Terminal=false
+StartupNotify=true
+NoDisplay=false
