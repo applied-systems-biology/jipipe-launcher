@@ -28,6 +28,8 @@ public class CreateApplicationIconsRun extends AbstractJIPipeRunnable {
 
     @Override
     public void run() {
+        getProgressInfo().setLogToStdOut(true);
+
         if(SystemUtils.IS_OS_WINDOWS) {
             // TODO: implement
         }

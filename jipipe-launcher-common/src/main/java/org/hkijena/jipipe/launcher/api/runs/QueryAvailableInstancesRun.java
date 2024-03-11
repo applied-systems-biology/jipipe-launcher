@@ -22,6 +22,7 @@ public class QueryAvailableInstancesRun extends AbstractJIPipeRunnable {
 
     @Override
     public void run() {
+        getProgressInfo().setLogToStdOut(true);
         String repositoryURL = JIPipeLauncherCommons.getInstance().getSettings().getRepositoryUrl();
         getProgressInfo().log("Downloading repository from " + repositoryURL);
         getProgressInfo().setProgress(0, 2);

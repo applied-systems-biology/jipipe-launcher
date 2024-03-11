@@ -19,6 +19,7 @@ public class DeleteDirectoryRun extends AbstractJIPipeRunnable {
 
     @Override
     public void run() {
+        getProgressInfo().setLogToStdOut(true);
         PathUtils.deleteDirectoryRecursively(directory, getProgressInfo());
     }
 }

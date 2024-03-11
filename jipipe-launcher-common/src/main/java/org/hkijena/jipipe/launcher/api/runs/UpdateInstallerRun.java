@@ -29,6 +29,7 @@ public class UpdateInstallerRun extends AbstractJIPipeRunnable {
 
     @Override
     public void run() {
+        getProgressInfo().setLogToStdOut(true);
         JIPipeLauncherBoostrapRepo repo;
         try {
             Path tmpFile = RuntimeSettings.generateTempFile("JIPipeLauncherBoostrap", ".json");

@@ -416,7 +416,14 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
     }
 
     public void exitLater(int ms) {
-        Timer timer = new Timer(ms, e -> Runtime.getRuntime().halt(0));
+        doLater(ms, () -> Runtime.getRuntime().halt(0));
+    }
+
+    public void doLater(int ms, Runnable runnable) {
+        Timer timer = new Timer(ms, e -> {
+            runnable.run();
+        });
+        timer.setRepeats(false);
         timer.start();
     }
 

@@ -29,6 +29,7 @@ public class DuplicateInstanceRun extends AbstractJIPipeRunnable {
 
     @Override
     public void run() {
+        getProgressInfo().setLogToStdOut(true);
         getProgressInfo().log("Duplicating " + sourceDirectory + " ---> " + targetDirectory);
         if(Files.exists(targetDirectory)) {
             PathUtils.deleteDirectoryRecursively(targetDirectory, getProgressInfo().resolve("Ensuring empty target directory"));

@@ -30,6 +30,7 @@ public class DownloadFullPackageInstanceRun extends AbstractJIPipeRunnable {
 
     @Override
     public void run() {
+        getProgressInfo().setLogToStdOut(true);
         JIPipeProgressInfo progressInfo = getProgressInfo();
 
         // Download the archive

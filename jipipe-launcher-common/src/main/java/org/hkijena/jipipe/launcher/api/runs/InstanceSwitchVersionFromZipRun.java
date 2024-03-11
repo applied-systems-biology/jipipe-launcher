@@ -28,6 +28,7 @@ public class InstanceSwitchVersionFromZipRun extends AbstractJIPipeRunnable {
 
     @Override
     public void run() {
+        getProgressInfo().setLogToStdOut(true);
         Path pluginDir = targetInstance.getAbsoluteApplicationDirectory().resolve("plugins").resolve("JIPipe");
         Path jarDir = targetInstance.getAbsoluteApplicationDirectory().resolve("jars");
 

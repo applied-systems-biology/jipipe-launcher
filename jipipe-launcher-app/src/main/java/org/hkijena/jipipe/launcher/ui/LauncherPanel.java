@@ -34,10 +34,13 @@ public class LauncherPanel extends JIPipeWorkbenchPanel implements InstancesUpda
         reloadList();
         if(!commons.getSettings().isOfflineMode()) {
             commons.queryAvailableInstances();
-            commons.boostrapUpdateInstaller();
         }
         if(commons.getSettings().isCreateLauncherIcons()) {
             JIPipeRunnerQueue.getInstance().enqueue(new CreateApplicationIconsRun());
+        }
+        if(!commons.getSettings().isOfflineMode()) {
+            // Delay to give the application time to exit
+            commons.doLater(2000, commons::boostrapUpdateInstaller);
         }
     }
 

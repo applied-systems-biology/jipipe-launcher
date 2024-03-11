@@ -1,5 +1,6 @@
 package org.hkijena.jipipe.launcher.ui.utils;
 
+import org.hkijena.jipipe.launcher.api.JIPipeLauncherCommons;
 import org.hkijena.jipipe.ui.components.RoundedButtonUI;
 import org.hkijena.jipipe.utils.ui.RoundedLineBorder;
 
@@ -13,13 +14,12 @@ public class LauncherUIUtils {
     }
 
     public static void buttonTimeout(JButton button, int timeout) {
-        Timer timer = new Timer(timeout, e -> {
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        button.setEnabled(false);
+        JIPipeLauncherCommons.getInstance().doLater(timeout, () -> {
             button.setEnabled(true);
             button.setCursor(Cursor.getDefaultCursor());
         });
-        button.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        button.setEnabled(false);
-        timer.start();
     }
 
     public static JButton createHeroButton(String text, Icon icon, Consumer<JButton> action) {
