@@ -5,16 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a9a2b870-8528-4685-a3bd-44f2e7ed1a13" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/jipipe-launcher-installer/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jipipe-launcher-installer/src/main/java/org/hkijena/jipipe/launcher/installer/MainWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jipipe-launcher-app/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-app/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/MainWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/MainWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/LauncherPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/LauncherPanel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeLauncherCommons.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeLauncherCommons.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jipipe-launcher-installer/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-installer/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,6 +26,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$MAVEN_REPOSITORY$/org/hkijena/jipipe-core/3.0.0-SNAPSHOT/jipipe-core-3.0.0-SNAPSHOT-sources.jar!/org/hkijena/jipipe/ui/running/JIPipeRunnableLogsCollection.java" root0="SKIP_INSPECTION" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -45,34 +42,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Main.executor": "Debug",
-    "Application.MainWindow (1).executor": "Debug",
-    "Application.MainWindow.executor": "Debug",
-    "Application.org.hkijena.jipipe.launcher.Main.executor": "Debug",
-    "Application.org.hkijena.jipipe.launcher.installer.MainWindow.executor": "Debug",
-    "Maven.jipipe-launcher [clean].executor": "Run",
-    "Maven.jipipe-launcher [compile].executor": "Run",
-    "Maven.pom-jipipe-launcher [clean].executor": "Run",
-    "Maven.pom-jipipe-launcher [package].executor": "Run",
-    "Maven.pom-jipipe-launcher [validate].executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "extract.method.default.visibility": "private",
-    "kotlin-language-version-configured": "true",
-    "last_directory_selection": "/home/ruman/src/jipipe-launcher/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/events",
-    "last_opened_file_path": "/home/ruman/src/jipipe-launcher",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "project.propDebugger",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Debug&quot;,
+    &quot;Application.MainWindow (1).executor&quot;: &quot;Debug&quot;,
+    &quot;Application.MainWindow.executor&quot;: &quot;Debug&quot;,
+    &quot;Application.org.hkijena.jipipe.launcher.Main.executor&quot;: &quot;Debug&quot;,
+    &quot;Application.org.hkijena.jipipe.launcher.installer.MainWindow.executor&quot;: &quot;Debug&quot;,
+    &quot;Maven.jipipe-launcher [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.jipipe-launcher [compile].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.pom-jipipe-launcher [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.pom-jipipe-launcher [package].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.pom-jipipe-launcher [validate].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;extract.method.default.visibility&quot;: &quot;private&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_directory_selection&quot;: &quot;/home/ruman/src/jipipe-launcher/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/events&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/ruman/src/jipipe-launcher&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propDebugger&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="org.hkijena.jipipe.launcher.api" />
@@ -134,11 +131,14 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Application.org.hkijena.jipipe.launcher.installer.MainWindow" />
+      <item itemvalue="Application.MainWindow" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.MainWindow" />
         <item itemvalue="Application.org.hkijena.jipipe.launcher.installer.MainWindow" />
-        <item itemvalue="Application.MainWindow" />
       </list>
     </recent_temporary>
   </component>
@@ -146,6 +146,7 @@
     <attachedChunks>
       <set>
         <option value="jdk-1.8.0_392-corretto-1.8.0_392-4caba194b151-023f9ed7" />
+        <option value="jdk-1.8.0_392-corretto-1.8.0_392-f644763e9732-5759c461" />
       </set>
     </attachedChunks>
   </component>
@@ -233,9 +234,8 @@
   <component name="XDebuggerManager">
     <watches-manager>
       <configuration name="Application">
-        <watch expression="JIPipe.instance" language="JAVA" />
-        <watch expression="JIPipeLauncherCommons.getInstance().findChangeLog(instance.getVersion())" language="JAVA" />
-        <watch expression="UIUtils.getIcon32FromResources(&quot;actions/documentinfo.png&quot;)" language="JAVA" />
+        <watch expression="entryJList.getModel().getSize()" language="JAVA" />
+        <watch expression="Arrays.asList(((DefaultListModel) entryJList.getModel()).toArray()).contains(latestAvailableInstance)" language="JAVA" custom="java.util.Arrays" />
       </configuration>
     </watches-manager>
   </component>

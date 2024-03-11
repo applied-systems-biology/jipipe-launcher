@@ -72,7 +72,7 @@ public class LauncherPanel extends JIPipeWorkbenchPanel implements InstancesUpda
             entryJList.setSelectedValue(latestInstalledInstance, true);
         }
         else {
-            JIPipeInstance latestAvailableInstance = commons.findLatestAvailableInstance();
+            JIPipeInstance latestAvailableInstance = commons.findLatestAvailableInstance(JIPipeInstanceDownloadType.FullPackage);
             if(latestAvailableInstance != null) {
                 entryJList.setSelectedValue(latestAvailableInstance, true);
             }
@@ -132,6 +132,6 @@ public class LauncherPanel extends JIPipeWorkbenchPanel implements InstancesUpda
 
     @Override
     public void onInstanceRepositoryUpdated(InstancesUpdatedEvent event) {
-        reloadList();
+        SwingUtilities.invokeLater(this::reloadList);
     }
 }

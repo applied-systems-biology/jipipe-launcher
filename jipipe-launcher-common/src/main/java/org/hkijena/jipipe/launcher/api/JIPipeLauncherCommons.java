@@ -229,8 +229,16 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
         return getSortedInstanceList().stream().filter(JIPipeInstance::isInstalled).findFirst().orElse(null);
     }
 
-    public JIPipeInstance findLatestAvailableInstance() {
-        return getSortedInstanceList().stream().filter(JIPipeInstance::isNotInstalled).findFirst().orElse(null);
+    public JIPipeInstance findLatestAvailableInstance(JIPipeInstanceDownloadType typeFilter) {
+        return getSortedInstanceList().stream().filter(instance -> {
+            if(instance.isInstalled()) {
+                return false;
+            }
+            if(instance.getCompatibleDownloads(typeFilter).isEmpty()) {
+                return false;
+            }
+            return true;
+        }).findFirst().orElse(null);
     }
 
     @Override
