@@ -5,26 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a9a2b870-8528-4685-a3bd-44f2e7ed1a13" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/dist/any/build.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/linux/build.sh" beforeDir="false" afterPath="$PROJECT_DIR$/dist/linux/build.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/linux/jipipe-installer" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/linux/jipipe-installer.desktop" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/linux/jipipe-launcher" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/linux/jipipe-launcher.desktop" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/linux/jipipe.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/windows/build.sh" beforeDir="false" afterPath="$PROJECT_DIR$/dist/windows/build.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/LauncherPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-app/src/main/java/org/hkijena/jipipe/launcher/ui/LauncherPanel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeLauncherCommons.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/JIPipeLauncherCommons.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/boostrap/JIPipeLauncherBoostrapRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/boostrap/JIPipeLauncherBoostrapRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/CreateApplicationIconsRun.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/CreateApplicationIconsRun.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/UpdateInstallerRun.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/UpdateUpdaterRun.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/UpdateLauncherRun.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-common/src/main/java/org/hkijena/jipipe/launcher/api/runs/UpdateLauncherRun.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jipipe-launcher-installer/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-updater/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jipipe-launcher-installer/src/main/java/org/hkijena/jipipe/launcher/installer/InstallerPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-updater/src/main/java/org/hkijena/jipipe/launcher/updater/UpdaterPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jipipe-launcher-installer/src/main/java/org/hkijena/jipipe/launcher/installer/MainWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/jipipe-launcher-updater/src/main/java/org/hkijena/jipipe/launcher/updater/MainWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -266,7 +248,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710179575605</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="* move to new installation method">
+      <option name="closed" value="true" />
+      <created>1710197606221</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1710197606221</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -282,7 +272,8 @@
     <MESSAGE value="+ added README" />
     <MESSAGE value="* full deployment chain working on linux" />
     <MESSAGE value="* fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="* fix" />
+    <MESSAGE value="* move to new installation method" />
+    <option name="LAST_COMMIT_MESSAGE" value="* move to new installation method" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

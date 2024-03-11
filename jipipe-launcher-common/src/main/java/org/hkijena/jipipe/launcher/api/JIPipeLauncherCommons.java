@@ -170,11 +170,11 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
     }
 
     public Path getLauncherJarSha1Path() {
-        return boostrapPath.resolve("jipipe-launcher.jar");
+        return boostrapPath.resolve("jipipe-launcher.jar.sha1");
     }
 
     public Path getLauncherJarPath() {
-        return boostrapPath.resolve("jipipe-launcher.jar.sha1");
+        return boostrapPath.resolve("jipipe-launcher.jar");
     }
 
     public Path getSettingsPath() {
