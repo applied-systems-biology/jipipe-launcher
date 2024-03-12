@@ -47,7 +47,7 @@
 	<key>PromptForFileOnLaunch</key>
 	<false/>
 	<key>RemainRunning</key>
-	<true/>
+	<false/>
 	<key>RunInBackground</key>
 	<false/>
 	<key>ScriptArgs</key>
@@ -254,6 +254,6 @@
 		<string>public.folder</string>
 	</array>
 	<key>Version</key>
-	<string>1.0</string>
+	<string>1.0.0</string>
 </dict>
 </plist>
