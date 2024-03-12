@@ -49,7 +49,7 @@ public class CreateApplicationIconsRun extends AbstractJIPipeRunnable {
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.append("[Desktop Entry]\n")
                         .append("Name=JIPipe\n")
-                        .append("Exec=").append(JIPipeLauncherCommons.getInstance().getInstallerJarPath()).append(" --launch-jipipe\n")
+                        .append("Exec=").append(JIPipeLauncherCommons.getInstance().getUpdaterJarPath()).append(" --launch-jipipe\n")
                         .append("Icon=jipipe\n")
                         .append("Type=Application\n")
                         .append("Categories=Science;\n")

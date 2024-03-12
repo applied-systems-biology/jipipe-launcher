@@ -47,9 +47,6 @@ popd || exit 1
 echo "60"
 echo "# Creating in $INSTANCE_DIR ... downloading updater"
 wget -O "$INSTANCE_DIR/jipipe-launcher-updater.jar" "$UPDATER_URL"
-SHA1=$(sha1sum "$INSTANCE_DIR/jipipe-launcher-updater.jar" | awk '{print $1}')
-echo "$SHA1" > "$INSTANCE_DIR/jipipe-launcher-updater.jar.sha1"
-
 
 # =================================================================
 echo "80"
