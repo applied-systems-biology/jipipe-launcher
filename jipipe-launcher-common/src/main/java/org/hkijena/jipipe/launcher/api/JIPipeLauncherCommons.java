@@ -21,10 +21,17 @@ import org.hkijena.jipipe.utils.StringUtils;
 import org.hkijena.jipipe.utils.json.JsonUtils;
 
 import javax.swing.Timer;
+import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -168,6 +175,15 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
     public Path getLauncherJarPath() {
         return boostrapPath.resolve("jipipe-launcher.jar");
     }
+
+    public Path getUpdaterJarSha1Path() {
+        return boostrapPath.resolve("jipipe-launcher-updater.jar.sha1");
+    }
+
+    public Path getLauncherJarSha1Path() {
+        return boostrapPath.resolve("jipipe-launcher.jar.sha1");
+    }
+
 
     public Path getSettingsPath() {
         return settingsPath;

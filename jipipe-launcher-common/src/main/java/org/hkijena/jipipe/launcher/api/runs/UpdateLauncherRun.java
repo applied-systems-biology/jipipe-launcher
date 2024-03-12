@@ -48,14 +48,14 @@ public class UpdateLauncherRun extends AbstractJIPipeRunnable {
         }
 
         boolean needsUpdate = false;
-        if(!Files.exists(JIPipeLauncherCommons.getInstance().getLauncherJarPath())) {
-            getProgressInfo().log(JIPipeLauncherCommons.getInstance().getLauncherJarPath() + " does not exist -> download launcher");
+        if(!Files.exists(JIPipeLauncherCommons.getInstance().getLauncherJarPath()) || !Files.isRegularFile(JIPipeLauncherCommons.getInstance().getLauncherJarSha1Path())) {
+            getProgressInfo().log(JIPipeLauncherCommons.getInstance().getLauncherJarPath() + " does not exist / not tagged with SHA1 -> download launcher");
             needsUpdate = true;
         }
         else {
             try {
                 // Check SHA
-                String currentSha1 = PathUtils.computeFileSHA1(JIPipeLauncherCommons.getInstance().getLauncherJarPath().toFile());
+                String currentSha1 = new String(Files.readAllBytes(JIPipeLauncherCommons.getInstance().getLauncherJarSha1Path()), StandardCharsets.UTF_8);
                 String wantedSha1 = launcherDownload.getSha1();
 
                 if(!Objects.equals(currentSha1, wantedSha1)) {
@@ -101,6 +101,14 @@ public class UpdateLauncherRun extends AbstractJIPipeRunnable {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        }
+
+        // Write new SHA1
+        try {
+            Files.write(JIPipeLauncherCommons.getInstance().getLauncherJarSha1Path(),
+                    launcherDownload.getSha1().getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -1,19 +1,23 @@
 package org.hkijena.jipipe.launcher.api.runs;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.hkijena.jipipe.api.AbstractJIPipeRunnable;
 import org.hkijena.jipipe.extensions.settings.RuntimeSettings;
 import org.hkijena.jipipe.launcher.api.JIPipeLauncherCommons;
 import org.hkijena.jipipe.launcher.api.boostrap.JIPipeLauncherBoostrapRepo;
 import org.hkijena.jipipe.launcher.api.repo.JIPipeInstanceDownload;
 import org.hkijena.jipipe.launcher.api.repo.JIPipeInstanceDownloadResult;
+import org.hkijena.jipipe.utils.ArchiveUtils;
 import org.hkijena.jipipe.utils.PathUtils;
 import org.hkijena.jipipe.utils.WebUtils;
 import org.hkijena.jipipe.utils.json.JsonUtils;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Objects;
 
 public class UpdateUpdaterRun extends AbstractJIPipeRunnable {
@@ -44,14 +48,14 @@ public class UpdateUpdaterRun extends AbstractJIPipeRunnable {
         }
 
         boolean needsUpdate = false;
-        if(!Files.exists(JIPipeLauncherCommons.getInstance().getUpdaterJarPath())) {
-            getProgressInfo().log(JIPipeLauncherCommons.getInstance().getUpdaterJarPath() + " does not exist -> download installer");
+        if(!Files.exists(JIPipeLauncherCommons.getInstance().getUpdaterJarPath()) || !Files.isRegularFile(JIPipeLauncherCommons.getInstance().getUpdaterJarSha1Path())) {
+            getProgressInfo().log(JIPipeLauncherCommons.getInstance().getUpdaterJarPath() + " does not exist / not tagged with SHA1 -> download installer");
             needsUpdate = true;
         }
         else {
             try {
                 // Check SHA
-                String currentSha1 = PathUtils.computeFileSHA1(JIPipeLauncherCommons.getInstance().getUpdaterJarPath().toFile());
+                String currentSha1 = new String(Files.readAllBytes(JIPipeLauncherCommons.getInstance().getUpdaterJarSha1Path()), StandardCharsets.UTF_8);
                 String wantedSha1 = installerDownload.getSha1();
 
                 if(!Objects.equals(currentSha1, wantedSha1)) {
@@ -97,6 +101,14 @@ public class UpdateUpdaterRun extends AbstractJIPipeRunnable {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        }
+
+        // Write new SHA1
+        try {
+            Files.write(JIPipeLauncherCommons.getInstance().getUpdaterJarSha1Path(),
+                    installerDownload.getSha1().getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
