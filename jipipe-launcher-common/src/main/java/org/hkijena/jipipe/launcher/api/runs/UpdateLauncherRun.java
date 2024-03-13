@@ -1,13 +1,11 @@
 package org.hkijena.jipipe.launcher.api.runs;
 
-import org.apache.commons.lang3.SystemUtils;
 import org.hkijena.jipipe.api.AbstractJIPipeRunnable;
 import org.hkijena.jipipe.extensions.settings.RuntimeSettings;
 import org.hkijena.jipipe.launcher.api.JIPipeLauncherCommons;
 import org.hkijena.jipipe.launcher.api.boostrap.JIPipeLauncherBoostrapRepo;
 import org.hkijena.jipipe.launcher.api.repo.JIPipeInstanceDownload;
 import org.hkijena.jipipe.launcher.api.repo.JIPipeInstanceDownloadResult;
-import org.hkijena.jipipe.utils.ArchiveUtils;
 import org.hkijena.jipipe.utils.PathUtils;
 import org.hkijena.jipipe.utils.WebUtils;
 import org.hkijena.jipipe.utils.json.JsonUtils;
@@ -18,7 +16,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.Objects;
 
 public class UpdateLauncherRun extends AbstractJIPipeRunnable {
     @Override
@@ -58,7 +55,7 @@ public class UpdateLauncherRun extends AbstractJIPipeRunnable {
                 String currentSha1 = new String(Files.readAllBytes(JIPipeLauncherCommons.getInstance().getLauncherJarSha1Path()), StandardCharsets.UTF_8);
                 String wantedSha1 = launcherDownload.getSha1();
 
-                if(!Objects.equals(currentSha1, wantedSha1)) {
+                if(!JIPipeLauncherCommons.getInstance().sha1Equals(currentSha1, wantedSha1)) {
                     getProgressInfo().log("SHA1 difference '" + currentSha1 + "' <> '" + wantedSha1 + "'");
                     needsUpdate = true;
                 }

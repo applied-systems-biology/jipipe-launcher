@@ -58,7 +58,7 @@ public class UpdateUpdaterRun extends AbstractJIPipeRunnable {
                 String currentSha1 = new String(Files.readAllBytes(JIPipeLauncherCommons.getInstance().getUpdaterJarSha1Path()), StandardCharsets.UTF_8);
                 String wantedSha1 = installerDownload.getSha1();
 
-                if(!Objects.equals(currentSha1, wantedSha1)) {
+                if(!JIPipeLauncherCommons.getInstance().sha1Equals(currentSha1, wantedSha1)) {
                     getProgressInfo().log("SHA1 difference '" + currentSha1 + "' <> '" + wantedSha1 + "'");
                     needsUpdate = true;
                 }

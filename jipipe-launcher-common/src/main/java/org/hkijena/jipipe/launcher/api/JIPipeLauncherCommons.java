@@ -21,17 +21,10 @@ import org.hkijena.jipipe.utils.StringUtils;
 import org.hkijena.jipipe.utils.json.JsonUtils;
 
 import javax.swing.Timer;
-import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.DigestInputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -229,14 +222,22 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
         List<JIPipeInstance> instances = new ArrayList<>(settings.getInstalledInstances());
         for (JIPipeInstance availableInstance : availableInstances) {
             // Annotate instances with the same version with the URL
-            List<JIPipeInstance> installedWithVersion = settings.getInstalledInstances().stream().filter(installed -> Objects.equals(availableInstance.getVersion(),
-                    installed.getVersion())).collect(Collectors.toList());
+            List<JIPipeInstance> installedWithVersion = new ArrayList<>();
+            boolean hasNoCustom = false;
+            for (JIPipeInstance installed : settings.getInstalledInstances()) {
+                if(Objects.equals(availableInstance.getVersion(), installed.getVersion())) {
+                    installedWithVersion.add(installed);
+                    if(!installed.isCustomized()) {
+                        hasNoCustom = true;
+                    }
+                }
+            }
             for (JIPipeInstance instance : installedWithVersion) {
                 instance.setDownloads(availableInstance.getDownloads());
                 instance.setChangeLog(availableInstance.getChangeLog());
             }
-            if (installedWithVersion.isEmpty()) {
-                // Not installed --> add
+            if (installedWithVersion.isEmpty() || !hasNoCustom) {
+                // No clean installed instance
                 instances.add(availableInstance);
             }
         }
@@ -436,4 +437,8 @@ public class JIPipeLauncherCommons implements JIPipeRunnable.FinishedEventListen
     }
 
 
+    public boolean sha1Equals(String first, String second) {
+        return Objects.equals(StringUtils.nullToEmpty(first).trim().toLowerCase(),
+                StringUtils.nullToEmpty(second).trim().toLowerCase());
+    }
 }

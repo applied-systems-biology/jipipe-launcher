@@ -148,7 +148,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="jdk-1.8.0_392-corretto-1.8.0_392-f644763e9732-5759c461" />
+        <option value="jdk-1.8.0_392-corretto-1.8.0_392-4caba194b151-023f9ed7" />
       </set>
     </attachedChunks>
   </component>
@@ -169,6 +169,7 @@
       <workItem from="1710009791417" duration="18467000" />
       <workItem from="1710075788040" duration="11797000" />
       <workItem from="1710167223173" duration="12834000" />
+      <workItem from="1710333379158" duration="1093000" />
     </task>
     <task id="LOCAL-00001" summary="+ working installation and launching">
       <option name="closed" value="true" />
