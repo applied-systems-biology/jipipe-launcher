@@ -380,10 +380,27 @@ public class JIPipeInstanceUI extends ImageFrame implements JIPipeWorkbenchAcces
     }
 
     private void initializeAddExistingButtonPanel(JPanel buttonPanel) {
-        JButton button = LauncherUIUtils.createHeroButton("Add existing ImageJ",
+
+        buttonPanel.add(LauncherUIUtils.createSecondaryButton("Import *.zip",
+                UIUtils.getIconInverted32FromResources("actions/cm_packfiles.png"),
+                this::importZipInstance));
+        buttonPanel.add(Box.createHorizontalStrut(12));
+        JButton addExistingImageJButton = LauncherUIUtils.createHeroButton("Add existing ImageJ",
                 UIUtils.getIconInverted32FromResources("actions/albumfolder-importdir.png"),
                 this::importExistingInstance);
-        buttonPanel.add(button);
+        buttonPanel.add(addExistingImageJButton);
+    }
+
+    private void importZipInstance(JButton button) {
+        Path zipFile = FileChooserSettings.openFile(this, FileChooserSettings.LastDirectoryKey.External, "Select JIPipe package *.zip",
+                UIUtils.EXTENSION_FILTER_ZIP);
+        if(zipFile != null) {
+            String newName = JOptionPane.showInputDialog(this, "Please set a name for the imported instance:");
+
+            if(!StringUtils.isNullOrEmpty(newName)) {
+                JIPipeRunExecuterUI.runInDialog(getWorkbench(), this, new InstallFullPackageZipRun(zipFile, newName));
+            }
+        }
     }
 
     private void importExistingInstance(JButton button) {

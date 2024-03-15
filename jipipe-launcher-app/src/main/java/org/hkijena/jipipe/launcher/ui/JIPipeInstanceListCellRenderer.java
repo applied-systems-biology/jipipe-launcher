@@ -66,11 +66,11 @@ public class JIPipeInstanceListCellRenderer extends JPanel implements ListCellRe
     public Component getListCellRendererComponent(JList<? extends JIPipeInstance> list, JIPipeInstance value, int index, boolean isSelected, boolean cellHasFocus) {
 
         if(value == null) {
-            iconLabel.setIcon(UIUtils.getIconInverted32FromResources("actions/add.png"));
+            iconLabel.setIcon(UIUtils.getIcon32FromResources("actions/add.png"));
             nameLabel.setText("Add");
-            versionLabel.setText("Import an existing ImageJ directory");
-            nameLabel.setEnabled(false);
-            versionLabel.setEnabled(false);
+            versionLabel.setText("Import *.zip/Fiji.app");
+            nameLabel.setEnabled(true);
+            versionLabel.setEnabled(true);
         }
         else {
             if (value.isInstalled()) {

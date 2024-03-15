@@ -65,7 +65,7 @@ public class DownloadFullPackageInstanceRun extends AbstractJIPipeRunnable {
 
 
         // Write a copy of the instance info
-        JsonUtils.saveToFile(instance, absoluteInstallationPath.resolve("jipipe-launcher-instance-info.json"));
+        JsonUtils.saveToFile(newInstance, absoluteInstallationPath.resolve("jipipe-launcher-instance-info.json"));
 
         // Cleanup
         try {
